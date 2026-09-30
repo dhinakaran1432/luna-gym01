@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  username     String   @unique
+  passwordHash String
+  name         String
+  role         String   @default("user")
+  phone        String?
+  age          Int?
+  gender       String?
+  plan         String?
+  payment      String   @default("Pending")
+  expiry       String?
+  joined       DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([username])
+}
+
+// Single-row table holding the full app state as a JSON blob.
+// This is what makes the "zero frontend change" possible.
+model AppState {
+  id        Int      @id @default(1)
+  data      Json
+  updatedAt DateTime @updatedAt
+}
