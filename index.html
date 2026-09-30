@@ -1,0 +1,1357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#070b14">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Luna">
+<title>LUNA</title>
+<link id="manifestLink" rel="manifest">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<style>
+:root{--bg:#070b14;--line:rgba(255,255,255,.09);--txt:#e8edf7;--muted:#93a1b8;--orange:#ff6b35;--amber:#ffb347;--gold:#facc15}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',system-ui,sans-serif}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--txt);min-height:100vh;padding:26px 18px 70px;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body::before,body::after{content:'';position:fixed;border-radius:50%;filter:blur(100px);opacity:.42;z-index:0;pointer-events:none;animation:floaty 16s ease-in-out infinite}
+body::before{width:540px;height:540px;top:-200px;left:-160px;background:radial-gradient(circle,#ff6b35,transparent 70%)}
+body::after{width:600px;height:600px;bottom:-260px;right:-180px;background:radial-gradient(circle,#2563eb,transparent 70%);animation-delay:-8s}
+@keyframes floaty{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(0,34px,0) scale(1.1)}}
+.hidden{display:none!important}
+.card{position:relative;z-index:1;background:linear-gradient(165deg,rgba(24,35,56,.82),rgba(14,21,36,.78));border:1px solid var(--line);border-radius:22px;padding:24px;max-width:900px;margin:0 auto 18px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 24px 60px -34px rgba(0,0,0,.95),inset 0 1px 0 rgba(255,255,255,.05);overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:12%;right:12%;height:1px;background:linear-gradient(90deg,transparent,rgba(250,204,21,.55),transparent);opacity:.75}
+#loginPage,#registerPage,#paymentPage,#waitingPage,#userPage,#taskPage,#ownerPage,#profilePage,#storePage{animation:fadeUp .55s cubic-bezier(.2,.8,.3,1) both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+h1,h2,h3{margin-bottom:10px;line-height:1.25}
+h2{font-size:21px;font-weight:700;letter-spacing:.2px}
+h3{font-size:16px;font-weight:600;letter-spacing:.2px}
+.muted{color:var(--muted);font-size:13px;line-height:1.6}
+.center{text-align:center}
+.logo{text-align:center;font-size:36px;font-weight:800;letter-spacing:6px;color:#fff;margin-bottom:6px;text-shadow:0 10px 34px rgba(255,107,53,.35)}
+.logo span{background:linear-gradient(135deg,#facc15,#ff6b35);-webkit-background-clip:text;background-clip:text;color:transparent}
+input,select,textarea{width:100%;padding:13px 16px;border-radius:14px;border:1px solid var(--line);background:rgba(8,13,24,.78);color:#fff;font-size:14px;margin-bottom:12px;outline:none;transition:border-color .25s,box-shadow .25s,background .25s;font-family:inherit}
+input::placeholder,textarea::placeholder{color:#64748b}
+select option{background:#0f172a;color:#fff}
+input:focus,select:focus,textarea:focus{border-color:rgba(250,204,21,.75);background:rgba(8,13,24,.98);box-shadow:0 0 0 4px rgba(250,204,21,.13)}
+.btn{padding:12px 20px;border:none;border-radius:14px;background:linear-gradient(135deg,#ff6b35,#ff9a3d);color:#fff;font-weight:700;font-size:14px;letter-spacing:.3px;cursor:pointer;transition:transform .22s,box-shadow .22s,filter .22s;box-shadow:0 10px 26px -12px rgba(255,107,53,.95);display:inline-block;text-align:center;text-decoration:none}
+.btn:hover{transform:translateY(-2px);filter:brightness(1.07);box-shadow:0 18px 32px -14px rgba(255,107,53,1)}
+.btn:active{transform:translateY(0) scale(.98)}
+.btn.gray{background:rgba(255,255,255,.07);color:#e2e8f0;border:1px solid var(--line);box-shadow:none}
+.btn.gray:hover{background:rgba(255,255,255,.13)}
+.btn.green{background:linear-gradient(135deg,#16a34a,#4ade80);box-shadow:0 10px 26px -12px rgba(34,197,94,.95)}
+.btn.blue{background:linear-gradient(135deg,#0284c7,#38bdf8);box-shadow:0 10px 26px -12px rgba(56,189,248,.95)}
+.btn.purple{background:linear-gradient(135deg,#7c3aed,#a78bfa);box-shadow:0 10px 26px -12px rgba(167,139,250,.95)}
+.btn.red{background:rgba(248,113,113,.15);color:#f87171;box-shadow:none;border:1px solid rgba(248,113,113,.25)}
+.btn.small{padding:8px 14px;font-size:12px;border-radius:10px}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
+.stat{position:relative;background:linear-gradient(160deg,rgba(255,255,255,.075),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:18px 18px 18px 22px;overflow:hidden;transition:transform .28s,border-color .28s,box-shadow .28s}
+.stat::after{content:'';position:absolute;top:14%;bottom:14%;left:0;width:3px;border-radius:99px;background:linear-gradient(#ff6b35,#facc15)}
+.stat:hover{transform:translateY(-4px);border-color:rgba(250,204,21,.35);box-shadow:0 22px 40px -26px #000}
+.stat h3{margin-bottom:2px}
+.stat b{font-size:22px;font-weight:800;color:#fff;display:block;letter-spacing:.3px}
+.badge{display:inline-block;padding:5px 14px;border-radius:99px;font-size:12px;font-weight:700;letter-spacing:.4px}
+.paid{background:rgba(34,197,94,.16);color:#4ade80;box-shadow:inset 0 0 0 1px rgba(34,197,94,.38)}
+.pending{background:rgba(250,204,21,.14);color:#facc15;box-shadow:inset 0 0 0 1px rgba(250,204,21,.32)}
+.awaiting{background:rgba(56,189,248,.16);color:#38bdf8;box-shadow:inset 0 0 0 1px rgba(56,189,248,.42)}
+.delivered{background:rgba(167,139,250,.16);color:#a78bfa;box-shadow:inset 0 0 0 1px rgba(167,139,250,.42)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:12px 10px;text-align:left}
+th{position:sticky;top:0;z-index:2;background:#101a2c;color:#94a3b8;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid var(--line)}
+td{border-bottom:1px solid rgba(255,255,255,.06)}
+tr:hover td{background:rgba(255,255,255,.035)}
+.scroll{overflow:auto;max-height:280px;border-radius:14px;border:1px solid rgba(255,255,255,.05)}
+.scroll::-webkit-scrollbar{width:8px;height:8px}
+.scroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,.16);border-radius:99px}
+.task{background:linear-gradient(160deg,rgba(255,255,255,.065),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:10px;transition:transform .25s,border-color .25s,box-shadow .25s}
+.task:hover{transform:translateX(4px);border-color:rgba(250,204,21,.32);box-shadow:0 16px 30px -24px #000}
+.task b{font-size:14px;letter-spacing:.3px}
+#qrBox{background:#fff;padding:14px;border-radius:18px;display:inline-block;box-shadow:0 0 0 8px rgba(255,255,255,.05),0 26px 50px -26px #000;animation:qrPulse 3.2s ease-in-out infinite}
+@keyframes qrPulse{0%,100%{box-shadow:0 0 0 8px rgba(255,255,255,.05),0 26px 50px -26px #000}50%{box-shadow:0 0 0 12px rgba(250,204,21,.14),0 26px 50px -26px #000}}
+.error{color:#f87171;font-size:13px;margin-top:8px}
+.success{color:#4ade80;font-size:13px;margin-top:8px}
+.member-card{position:relative;background:linear-gradient(135deg,#1e1b4b 0%,#312e81 45%,#7c2d12 100%);border-radius:22px;padding:22px;border:1px solid rgba(255,255,255,.12);overflow:hidden;box-shadow:0 26px 50px -22px #000,inset 0 1px 0 rgba(255,255,255,.12)}
+.member-card::before{content:'';position:absolute;top:-60%;right:-15%;width:240px;height:240px;background:radial-gradient(circle,rgba(250,204,21,.35),transparent 70%);border-radius:50%}
+.member-card::after{content:'';position:absolute;bottom:-40%;left:-10%;width:200px;height:200px;background:radial-gradient(circle,rgba(56,189,248,.28),transparent 70%);border-radius:50%}
+.mc-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;position:relative;z-index:1}
+.mc-top .logo{font-size:20px;margin:0;text-shadow:none;letter-spacing:3px}
+.mc-body{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:12px;position:relative;z-index:1}
+.mc-body p{font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:rgba(255,255,255,.65);margin-bottom:2px}
+.mc-body b{font-size:15px;color:#fff;letter-spacing:.5px}
+.mc-qr{position:absolute;bottom:16px;right:16px;background:#fff;padding:6px;border-radius:12px;z-index:2;box-shadow:0 10px 24px -10px #000}
+.mc-strip{position:relative;z-index:1;margin-top:8px;font-size:11px;letter-spacing:2px;color:rgba(255,255,255,.75);font-family:monospace}
+.search-wrap{position:relative;margin-bottom:10px}
+.search-wrap input{margin-bottom:0;padding-left:42px}
+.search-wrap::before{content:'🔍';position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:14px;opacity:.7;pointer-events:none}
+.set-row{display:flex;gap:6px;margin-bottom:6px;align-items:center}
+.set-row input{margin:0}
+.set-row button{padding:10px 14px;flex-shrink:0}
+.badge-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-top:10px}
+.badge-item{background:linear-gradient(160deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:14px;padding:14px;text-align:center;transition:all .3s}
+.badge-item.earned{border-color:rgba(250,204,21,.45);background:linear-gradient(160deg,rgba(250,204,21,.12),rgba(255,107,53,.06));box-shadow:0 0 22px -6px rgba(250,204,21,.4)}
+.badge-item .ico{font-size:26px;display:block;margin-bottom:4px;filter:grayscale(1);opacity:.35}
+.badge-item.earned .ico{filter:none;opacity:1}
+.badge-item b{font-size:12px;display:block;margin-bottom:2px}
+.badge-item small{font-size:10px;color:var(--muted);line-height:1.3;display:block}
+.points-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:99px;background:linear-gradient(135deg,#facc15,#ff9a3d);color:#1a1004;font-weight:800;font-size:13px;box-shadow:0 8px 20px -10px rgba(250,204,21,.9)}
+#revChart{padding:14px 0}
+.rev-bar{width:100%;height:130px;display:flex;align-items:flex-end}
+.rev-fill{width:100%;background:linear-gradient(180deg,#facc15,#ff6b35);border-radius:8px 8px 0 0;transition:height .6s cubic-bezier(.2,.8,.3,1);min-height:3px}
+.install-bar{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:99;background:linear-gradient(135deg,#ff6b35,#ff9a3d);color:#fff;padding:12px 20px;border-radius:99px;font-weight:700;font-size:13px;box-shadow:0 14px 34px -12px rgba(255,107,53,1);cursor:pointer;display:none;align-items:center;gap:8px}
+.upi-row{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px;flex-wrap:wrap}
+.upi-id{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.35);color:#4ade80;padding:6px 14px;border-radius:99px;font-weight:700;font-size:13px;font-family:monospace}
+.copy-btn{background:rgba(250,204,21,.15);border:1px solid rgba(250,204,21,.35);color:#facc15;padding:6px 12px;border-radius:99px;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s}
+.copy-btn:hover{background:rgba(250,204,21,.25)}
+.wait-box{text-align:center;padding:30px 20px}
+.wait-spinner{width:60px;height:60px;margin:0 auto 20px;border:4px solid rgba(250,204,21,.2);border-top-color:#facc15;border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.reg-cta{background:linear-gradient(135deg,rgba(250,204,21,.12),rgba(255,107,53,.08));border:1px solid rgba(250,204,21,.3);border-radius:16px;padding:16px;text-align:center;margin-top:14px}
+.reg-cta p{font-size:13px;color:#e8edf7;margin-bottom:10px}
+
+/* NEW: Header icons */
+.icon-btn{position:relative;width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.07);border:1px solid var(--line);color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.icon-btn:hover{background:rgba(255,255,255,.14);transform:translateY(-2px)}
+.notif-badge{position:absolute;top:-4px;right:-4px;background:linear-gradient(135deg,#ff6b35,#facc15);color:#1a1004;font-size:10px;font-weight:800;min-width:18px;height:18px;padding:0 5px;border-radius:99px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 10px -3px rgba(255,107,53,.9)}
+.avatar-btn{width:42px;height:42px;border-radius:50%;overflow:hidden;background:linear-gradient(135deg,#ff6b35,#facc15);border:2px solid rgba(250,204,21,.5);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:#1a1004;transition:all .2s;padding:0}
+.avatar-btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px -8px rgba(250,204,21,.8)}
+.avatar-btn img{width:100%;height:100%;object-fit:cover;display:block}
+
+/* NEW: Big avatar in profile */
+.avatar-wrap{text-align:center;margin:10px 0 18px}
+.avatar-big{width:130px;height:130px;border-radius:50%;margin:0 auto;overflow:hidden;background:linear-gradient(135deg,#ff6b35,#facc15);border:4px solid rgba(250,204,21,.35);display:flex;align-items:center;justify-content:center;font-size:52px;font-weight:800;color:#1a1004;cursor:pointer;position:relative;transition:all .3s;box-shadow:0 20px 40px -18px rgba(250,204,21,.5)}
+.avatar-big:hover{transform:scale(1.03);box-shadow:0 26px 50px -18px rgba(250,204,21,.7)}
+.avatar-big img{width:100%;height:100%;object-fit:cover;display:block}
+.avatar-big::after{content:'📷';position:absolute;bottom:6px;right:6px;background:rgba(0,0,0,.65);width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;border:2px solid rgba(255,255,255,.25)}
+
+/* NEW: Info / explainer card */
+.explain-row{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.explain-row:last-child{border-bottom:none}
+.explain-ico{font-size:22px;flex-shrink:0;width:36px;text-align:center}
+.explain-txt{flex:1}
+.explain-txt b{font-size:13px;color:#facc15;display:block;margin-bottom:2px}
+.explain-txt span{font-size:12px;color:var(--muted);line-height:1.5}
+
+/* NEW: Store product grid */
+.product-grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));margin-top:10px}
+.product-card{background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:16px;text-align:center;transition:all .28s;overflow:hidden;position:relative}
+.product-card:hover{transform:translateY(-4px);border-color:rgba(250,204,21,.4);box-shadow:0 22px 40px -26px #000}
+.product-emoji{font-size:48px;display:block;margin-bottom:8px;filter:drop-shadow(0 8px 14px rgba(255,107,53,.4))}
+.product-name{font-size:13px;font-weight:700;margin-bottom:4px;color:#fff}
+.product-desc{font-size:11px;color:var(--muted);margin-bottom:8px;line-height:1.4}
+.product-price{font-size:19px;font-weight:800;color:#facc15;margin-bottom:10px}
+.product-mrp{font-size:11px;color:#94a3b8;text-decoration:line-through;margin-left:6px;font-weight:500}
+.cart-bar{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#16a34a,#4ade80);color:#fff;padding:12px 22px;border-radius:99px;font-weight:800;font-size:14px;box-shadow:0 18px 40px -14px rgba(34,197,94,1);cursor:pointer;z-index:98;display:none;align-items:center;gap:10px}
+.cart-bar:hover{transform:translateX(-50%) translateY(-2px)}
+
+/* NEW: Notification list drawer */
+.notif-item{background:linear-gradient(160deg,rgba(255,255,255,.065),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:8px;display:flex;gap:10px;align-items:flex-start}
+.notif-item .dot{width:8px;height:8px;border-radius:50%;background:#facc15;margin-top:6px;flex-shrink:0;box-shadow:0 0 10px rgba(250,204,21,.7)}
+
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:#0a1120}
+::-webkit-scrollbar-thumb{background:#22304a;border-radius:99px}
+::-webkit-scrollbar-thumb:hover{background:#31425f}
+@media(max-width:600px){
+  body{padding:16px 12px 60px}
+  .card{padding:18px;border-radius:18px}
+  .logo{font-size:29px;letter-spacing:4px}
+  h2{font-size:18px}
+  .stat b{font-size:19px}
+  th,td{padding:10px 8px;font-size:13px}
+  .mc-body{grid-template-columns:1fr}
+  .mc-qr{position:static;margin-top:14px;display:inline-block}
+  .avatar-btn,.icon-btn{width:38px;height:38px;font-size:16px}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN PAGE -->
+<div id="loginPage" class="card" style="max-width:430px;margin-top:60px">
+  <div class="logo">LU<span>NA</span></div>
+  <p class="muted center">Login to your account</p>
+  <input id="loginUser" placeholder="Username">
+  <input id="loginPass" type="password" placeholder="Password">
+  <button class="btn" style="width:100%" onclick="login()">Login</button>
+  <p id="loginMsg" class="muted center"></p>
+  <div class="reg-cta">
+    <p>New here? Create your membership today 💪</p>
+    <button class="btn blue" style="width:100%" onclick="showPage('registerPage')">✨ New Register / New Member</button>
+  </div>
+</div>
+
+<!-- REGISTER PAGE -->
+<div id="registerPage" class="card hidden">
+  <h2>Create Account</h2>
+  <input id="rName" placeholder="Full name">
+  <input id="rUser" placeholder="Username">
+  <input id="rPass" type="password" placeholder="Password">
+  <input id="rPhone" placeholder="10-digit phone number">
+  <input id="rAge" type="number" placeholder="Age">
+  <select id="rGender"><option value="">Select gender</option><option>Male</option><option>Female</option><option>Other</option></select>
+  <h3>Membership Plan</h3>
+  <select id="rPlan">
+    <option value="">Select membership plan</option>
+    <option value="Basic">Basic - ₹499 / Month</option>
+    <option value="Standard">Standard - ₹999 / 3 Months</option>
+    <option value="Premium">Premium - ₹1999 / Year</option>
+  </select>
+  <button class="btn" style="width:100%" onclick="register()">Submit</button>
+  <button class="btn gray" style="width:100%;margin-top:8px" onclick="showPage('loginPage')">Back to Login</button>
+  <p id="regMsg" class="muted"></p>
+</div>
+
+<!-- PAYMENT PAGE -->
+<div id="paymentPage" class="card hidden">
+  <h2>Complete Payment</h2>
+  <p class="muted" id="payInfo"></p>
+  <div class="center" style="margin:22px 0"><div id="qrBox"></div></div>
+  <p class="muted center">Scan using <b style="color:#facc15">GPay</b> / <b style="color:#facc15">PhonePe</b> / <b style="color:#facc15">Paytm</b></p>
+  <div class="upi-row"><span class="upi-id">dhinakaranr83-1@oksbi</span><span class="copy-btn" onclick="copyUPI()">📋 Copy UPI ID</span></div>
+  <button id="upiPayBtn" class="btn green" style="width:100%;margin-top:14px" onclick="openUPIApp(event)">💳 Pay via UPI App</button>
+  <button class="btn blue" style="width:100%;margin-top:8px" onclick="markPaid()">✅ I Have Paid</button>
+  <button class="btn gray" style="width:100%;margin-top:8px" onclick="logout()">Logout</button>
+  <p id="payMsg" class="muted center"></p>
+</div>
+
+<!-- WAITING PAGE -->
+<div id="waitingPage" class="card hidden" style="max-width:520px">
+  <div class="wait-box">
+    <div class="wait-spinner"></div>
+    <h2 style="color:#facc15">Payment Under Review</h2>
+    <p class="muted" id="waitInfo" style="margin-top:10px"></p>
+    <div style="margin-top:22px;padding:14px;background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.28);border-radius:14px;text-align:left">
+      <p class="muted" style="font-size:12px;line-height:1.7">💡 <b style="color:#38bdf8">What happens next?</b><br>1. The gym owner verifies your payment<br>2. Your membership is activated<br>3. Log in again to access your dashboard</p>
+    </div>
+    <button class="btn gray" style="width:100%;margin-top:18px" onclick="logout()">Logout</button>
+    <button class="btn" style="width:100%;margin-top:8px" onclick="refreshWaiting()">🔄 Refresh Status</button>
+    <p id="waitMsg" class="muted center" style="margin-top:10px"></p>
+  </div>
+</div>
+
+<!-- USER DASHBOARD -->
+<div id="userPage" class="hidden">
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;align-items:center">
+      <h2 style="letter-spacing:4px;margin:0">LUNA</h2>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <span class="points-pill">⭐ <span id="uPoints">0</span></span>
+        <button class="icon-btn" onclick="scrollToNotifications()" title="Notifications">🔔<span class="notif-badge" id="notifBadge">0</span></button>
+        <button class="avatar-btn" id="headerAvatar" onclick="openProfile()" title="My Profile">👤</button>
+        <button class="btn gray small" onclick="logout()">Logout</button>
+      </div>
+    </div>
+    <p class="muted" id="welcomeUser" style="margin-top:8px"></p>
+  </div>
+
+  <div class="card">
+    <div class="grid">
+      <div class="stat"><h3 class="muted">Membership</h3><b id="uPlan">-</b></div>
+      <div class="stat"><h3 class="muted">Payment</h3><b id="uPay" class="badge paid">-</b></div>
+      <div class="stat"><h3 class="muted">Expiry Date</h3><b id="uExpiry">-</b></div>
+      <div class="stat"><h3 class="muted">Total Check-ins</h3><b id="uCount">0</b></div>
+      <div class="stat"><h3 class="muted">🔥 Streak</h3><b id="uStreak">0</b></div>
+    </div>
+  </div>
+
+  <!-- QUICK ACTIONS -->
+  <div class="card">
+    <h3>Quick Actions</h3>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
+      <button class="btn purple" onclick="openStore()">🛒 Gym Store</button>
+      <button class="btn blue" onclick="openProfile()">👤 My Profile</button>
+      <button class="btn gray" onclick="showPage('taskPage')">📋 Daily Tasks</button>
+    </div>
+  </div>
+
+  <!-- HOW POINTS & STREAK WORK -->
+  <div class="card">
+    <h3>🎯 How Points & Streak Work</h3>
+    <p class="muted" style="margin-bottom:12px">Stay consistent, earn points, unlock rewards.</p>
+
+    <div class="explain-row"><div class="explain-ico">✅</div><div class="explain-txt"><b>Daily Check-in — +10 pts</b><span>Tap "Check In Now" once per day when you arrive at the gym.</span></div></div>
+    <div class="explain-row"><div class="explain-ico">🏋️</div><div class="explain-txt"><b>Log a Workout — +15 pts</b><span>Open Workout Logger and save any exercise with at least one set.</span></div></div>
+    <div class="explain-row"><div class="explain-ico">📈</div><div class="explain-txt"><b>New Personal Record — +25 pts</b><span>Lift more weight than your previous best on any exercise.</span></div></div>
+    <div class="explain-row"><div class="explain-ico">🏅</div><div class="explain-txt"><b>Unlock a Badge — +50 pts</b><span>Badges unlock automatically for milestones (10 check-ins, 7-day streak, etc.).</span></div></div>
+    <div class="explain-row"><div class="explain-ico">🔥</div><div class="explain-txt"><b>Streak = Consecutive Days</b><span>Each day you check-in, your streak grows by 1. Miss a day → reset to 0. Don't break the chain!</span></div></div>
+    <div class="explain-row"><div class="explain-ico">🏆</div><div class="explain-txt"><b>Leaderboard</b><span>Top point earners appear on the owner's leaderboard. Beat your gym-mates!</span></div></div>
+  </div>
+
+  <div class="card">
+    <h3>Membership Card</h3>
+    <p class="muted" style="margin-bottom:14px">Your digital gym identity — show at the front desk.</p>
+    <div class="member-card">
+      <div class="mc-top"><div class="logo">LU<span>NA</span></div><span class="badge paid" id="mcStatus">ACTIVE</span></div>
+      <div class="mc-body">
+        <div><p>Member</p><b id="mcName">-</b></div>
+        <div><p>Member ID</p><b id="mcId">-</b></div>
+        <div><p>Plan</p><b id="mcPlan">-</b></div>
+        <div><p>Valid Till</p><b id="mcExpiry">-</b></div>
+      </div>
+      <div class="mc-strip">•••• •••• •••• <span id="mcTail">0000</span></div>
+      <div class="mc-qr" id="mcQr"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Attendance Check-in</h3>
+    <p class="muted">One check-in is allowed per day. Earn +10 pts each check-in.</p>
+    <button class="btn blue" style="margin-top:10px" onclick="checkIn()">Check In Now</button>
+    <p id="checkMsg" class="muted"></p>
+  </div>
+
+  <div class="card">
+    <h3>🏋️ Workout Logger</h3>
+    <p class="muted">Log sets, track progress, and beat your PRs. +15 pts per session.</p>
+    <input id="wlExercise" placeholder="Exercise name (e.g. Bench Press)" style="margin-top:12px">
+    <div id="wlSets"></div>
+    <button class="btn gray" onclick="addSetRow()">+ Add Set</button>
+    <button class="btn" style="margin-top:8px" onclick="saveWorkout()">💾 Save Workout</button>
+    <p id="wlMsg" class="muted"></p>
+    <h3 style="margin-top:22px">Recent Workouts</h3>
+    <div class="scroll"><table id="wlHistory"></table></div>
+  </div>
+
+  <div class="card">
+    <h3>📈 Personal Records</h3>
+    <p class="muted">Your all-time best lifts per exercise.</p>
+    <div class="scroll" style="margin-top:12px"><table id="prTable"></table></div>
+  </div>
+
+  <div class="card">
+    <h3>🏅 Achievements</h3>
+    <p class="muted">Unlock badges by staying consistent.</p>
+    <div class="badge-grid" id="badgeGrid"></div>
+  </div>
+
+  <div class="card">
+    <h3>📋 My Daily Workout Plan</h3>
+    <p class="muted">Default plan is set for new members. You can customise it anytime.</p>
+    <button class="btn" style="margin-top:10px" onclick="showPage('taskPage')">Open & Edit Plan</button>
+  </div>
+
+  <div class="card">
+    <h3>💪 Health Tracker</h3>
+    <p class="muted">Log your height and weight to track BMI over time.</p>
+    <div class="grid" style="margin-top:12px">
+      <input id="hHeight" type="number" placeholder="Height (cm)">
+      <input id="hWeight" type="number" placeholder="Weight (kg)">
+    </div>
+    <button class="btn purple" onclick="calcBMI()">Save &amp; Calculate BMI</button>
+    <p id="bmiMsg" class="muted"></p>
+    <div class="scroll" style="margin-top:12px"><table id="weightTable"></table></div>
+  </div>
+
+  <div class="card">
+    <h3>Attendance History</h3>
+    <div class="scroll"><table id="attTable"></table></div>
+  </div>
+
+  <div class="card">
+    <h3>Payment History</h3>
+    <div class="scroll"><table id="payTable"></table></div>
+  </div>
+
+  <div class="card" id="notificationsCard">
+    <h3>🔔 Notifications</h3>
+    <div id="notifyList"></div>
+  </div>
+</div>
+
+<!-- PROFILE PAGE (NEW) -->
+<div id="profilePage" class="card hidden" style="max-width:560px">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+    <h2>My Profile</h2>
+    <button class="btn gray small" onclick="showPage('userPage')">← Back</button>
+  </div>
+
+  <div class="avatar-wrap">
+    <div class="avatar-big" id="bigAvatar" onclick="document.getElementById('photoInput').click()">👤</div>
+    <p class="muted" style="margin-top:10px">Tap to change profile photo</p>
+    <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="uploadPhoto(event)">
+    <button class="btn gray small" style="margin-top:8px" onclick="removePhoto()">Remove Photo</button>
+  </div>
+
+  <h3>Basic Info</h3>
+  <input id="pName" placeholder="Full name">
+  <input id="pPhone" placeholder="Phone number">
+  <input id="pAge" type="number" placeholder="Age">
+  <select id="pGender"><option value="">Select gender</option><option>Male</option><option>Female</option><option>Other</option></select>
+
+  <h3 style="margin-top:14px">Change Password</h3>
+  <input id="pNewPass" type="password" placeholder="New password (leave blank to keep)">
+
+  <button class="btn" style="width:100%;margin-top:8px" onclick="updateProfile()">💾 Save Changes</button>
+  <p id="profMsg" class="muted center"></p>
+</div>
+
+<!-- STORE PAGE (NEW) -->
+<div id="storePage" class="card hidden">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+    <h2>🛒 LUNA Store</h2>
+    <button class="btn gray small" onclick="showPage('userPage')">← Back</button>
+  </div>
+  <p class="muted">Order supplements &amp; gear — collect &amp; pay at the gym counter.</p>
+
+  <div class="product-grid" id="productGrid"></div>
+
+  <h3 style="margin-top:24px">My Orders</h3>
+  <div class="scroll" style="margin-top:12px"><table id="myOrdersTable"></table></div>
+</div>
+
+<!-- TASK PAGE -->
+<div id="taskPage" class="card hidden">
+  <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;align-items:center">
+    <h2>My Daily Tasks</h2>
+    <button class="btn gray" onclick="showPage('userPage')">Back to Dashboard</button>
+  </div>
+  <p class="muted">Default plan is set for new members. You can customise each day.</p>
+  <div id="taskList" style="margin-top:14px"></div>
+</div>
+
+<!-- OWNER DASHBOARD -->
+<div id="ownerPage" class="card hidden">
+  <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;align-items:center">
+    <h2 style="letter-spacing:4px">LUNA • Owner</h2>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn gray" onclick="exportData()">⬇ Backup</button>
+      <button class="btn gray" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <div class="grid" style="margin:14px 0">
+    <div class="stat"><h3 class="muted">Members</h3><b id="oMembers">0</b></div>
+    <div class="stat"><h3 class="muted">Paid</h3><b id="oPaid">0</b></div>
+    <div class="stat"><h3 class="muted">Awaiting</h3><b id="oAwaiting">0</b></div>
+    <div class="stat"><h3 class="muted">Pending</h3><b id="oPending">0</b></div>
+    <div class="stat"><h3 class="muted">Today Check-ins</h3><b id="oToday">0</b></div>
+    <div class="stat"><h3 class="muted">💰 Revenue</h3><b id="oRevenue">₹0</b></div>
+    <div class="stat"><h3 class="muted">📉 Expenses</h3><b id="oExpenses">₹0</b></div>
+    <div class="stat"><h3 class="muted">✅ Net Profit</h3><b id="oProfit">₹0</b></div>
+  </div>
+
+  <div class="card">
+    <h3>📊 Revenue — Last 6 Months</h3>
+    <div id="revChart"></div>
+  </div>
+
+  <div class="card">
+    <h3>💸 Expense Tracker</h3>
+    <div class="grid" style="margin-top:12px">
+      <select id="expCategory"><option value="">Select category</option><option>Rent</option><option>Salaries</option><option>Equipment</option><option>Utilities</option><option>Maintenance</option><option>Marketing</option><option>Other</option></select>
+      <input id="expAmount" type="number" placeholder="Amount (₹)">
+    </div>
+    <input id="expNote" placeholder="Note (optional)">
+    <button class="btn" onclick="addExpense()">+ Add Expense</button>
+    <p id="expMsg" class="muted"></p>
+    <div class="scroll" style="margin-top:12px"><table id="expTable"></table></div>
+  </div>
+
+  <div class="card">
+    <h3>🛒 Store Orders</h3>
+    <p class="muted">Member orders from the LUNA store.</p>
+    <div class="scroll" style="margin-top:12px"><table id="ordersTable"></table></div>
+  </div>
+
+  <div class="card">
+    <h3>🏆 Leaderboard</h3>
+    <div class="scroll" style="margin-top:12px"><table id="leaderboardTable"></table></div>
+  </div>
+
+  <div class="card">
+    <h3>📢 Broadcast Announcement</h3>
+    <input id="bcastText" placeholder="Type your announcement..." style="margin-top:10px">
+    <button class="btn" onclick="broadcast()">Send to All Members</button>
+    <p id="bcastMsg" class="muted"></p>
+  </div>
+
+  <div class="card">
+    <h3>Members &amp; Payments</h3>
+    <div class="search-wrap"><input id="memberSearch" placeholder="Search by name, username or phone..." oninput="renderMembers(this.value)"></div>
+    <div class="scroll"><table id="ownerTable"></table></div>
+  </div>
+
+  <div class="card">
+    <h3>Member Workout Plans</h3>
+    <div id="ownerWorkouts"></div>
+  </div>
+
+  <div class="card">
+    <h3>Expiring / Expired Members</h3>
+    <div id="expiringList"></div>
+  </div>
+</div>
+
+<!-- PWA INSTALL BUTTON -->
+<div id="installBar" class="install-bar" onclick="doInstall()">
+  <span>📲</span> <span>Install LUNA App</span>
+</div>
+
+<script>
+/* ========== CONFIG ========== */
+const SYNC={
+  enabled:true,
+  endpoint:'https://YOUR-PROJECT.vercel.app/api/sync',
+  apiKey:'THE-SAME-STRING-AS-SYNC_API_KEY'
+};
+
+const K_USERS='dg_users',K_ATT='dg_attendance',K_TASK='dg_tasks',K_PAY='dg_payments',K_NOTE='dg_notes',
+      K_WEIGHT='dg_weight',K_WORKOUT='dg_workouts',K_PR='dg_prs',K_POINTS='dg_points',
+      K_BADGES='dg_badges',K_EXPENSES='dg_expenses',
+      K_PHOTOS='dg_photos',K_ORDERS='dg_orders';
+
+const ALL_KEYS=[K_USERS,K_ATT,K_TASK,K_PAY,K_NOTE,K_WEIGHT,K_WORKOUT,K_PR,K_POINTS,K_BADGES,K_EXPENSES,K_PHOTOS,K_ORDERS];
+
+const UPI_ID='dhinakaranr83-1@oksbi';
+const UPI_NAME='LUNA';
+
+const PLANS={
+  Basic:{price:499,days:30},
+  Standard:{price:999,days:90},
+  Premium:{price:1999,days:365}
+};
+
+const DAYS=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+const DEFAULT_TASK={
+  Monday:'Chest — Bench Press, Incline DB, Cable Fly',
+  Tuesday:'Back — Lat Pulldown, Barbell Row, Deadlift',
+  Wednesday:'Legs — Squat, Leg Press, Calf Raises',
+  Thursday:'Shoulders — OHP, Lateral Raise, Rear Delt',
+  Friday:'Arms — Bicep Curls, Tricep Pushdown, Hammer',
+  Saturday:'Cardio + Core — 20min Treadmill, Planks',
+  Sunday:'Rest — Recovery & Stretching'
+};
+
+const BADGES={
+  first_checkin:{name:'First Step',icon:'🎯',desc:'First check-in'},
+  checkins_10:{name:'Regular',icon:'💪',desc:'10 total check-ins'},
+  checkins_50:{name:'Dedicated',icon:'🏅',desc:'50 check-ins'},
+  checkins_100:{name:'Centurion',icon:'🏆',desc:'100 check-ins'},
+  streak_7:{name:'7-Day Streak',icon:'🔥',desc:'7 days in a row'},
+  streak_30:{name:'Consistency King',icon:'👑',desc:'30-day streak'},
+  first_workout:{name:'First Rep',icon:'🏋️',desc:'Log your first workout'},
+  workouts_10:{name:'Iron Will',icon:'⚙️',desc:'Log 10 workouts'},
+  pr_first:{name:'PR Hunter',icon:'📈',desc:'Set your first PR'},
+  pr_5:{name:'Record Breaker',icon:'🎖️',desc:'Set 5 PRs'},
+  early_bird:{name:'Early Bird',icon:'🌅',desc:'Check in before 7 AM'},
+  night_owl:{name:'Night Owl',icon:'🌙',desc:'Check in after 9 PM'}
+};
+
+/* ========== STORE PRODUCTS (with fixed MRP) ========== */
+const STORE_PRODUCTS=[
+  {id:'protein',   name:'Whey Protein 1kg',   mrp:2499, price:1999, emoji:'🥛', desc:'24g protein per scoop'},
+  {id:'creatine',  name:'Creatine 250g',       mrp:999,  price:799,  emoji:'💊', desc:'Pure micronized creatine'},
+  {id:'bcaa',      name:'BCAA 250g',           mrp:1299, price:999,  emoji:'🧪', desc:'2:1:1 ratio for recovery'},
+  {id:'preworkout',name:'Pre-Workout 300g',    mrp:1799, price:1299, emoji:'⚡', desc:'Energy & focus boost'},
+  {id:'shaker',    name:'Shaker Bottle 600ml', mrp:399,  price:299,  emoji:'🥤', desc:'Leak-proof with mixer'},
+  {id:'gloves',    name:'Lifting Gloves',      mrp:699,  price:499,  emoji:'🧤', desc:'Anti-slip padded grip'},
+  {id:'belt',      name:'Weight Belt',         mrp:1299, price:899,  emoji:'🥋', desc:'Leather support belt'},
+  {id:'tshirt',    name:'LUNA T-Shirt',        mrp:899,  price:599,  emoji:'👕', desc:'Dry-fit gym tee'},
+  {id:'shorts',    name:'Training Shorts',     mrp:999,  price:699,  emoji:'🩳', desc:'Flexible stretch fabric'},
+  {id:'bottle',    name:'Steel Water Bottle',  mrp:699,  price:499,  emoji:'🍶', desc:'1L insulated steel'}
+];
+
+/* ========== HELPERS ========== */
+function get(k,d){try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}}
+function save(k,v){localStorage.setItem(k,JSON.stringify(v));if(SYNC.enabled)syncPush();}
+
+if(!localStorage.getItem(K_USERS))save(K_USERS,[{name:'Owner',username:'owner',password:'owner123',role:'owner'}]);
+if(!localStorage.getItem(K_ATT))save(K_ATT,[]);
+if(!localStorage.getItem(K_TASK))save(K_TASK,{});
+if(!localStorage.getItem(K_PAY))save(K_PAY,[]);
+if(!localStorage.getItem(K_NOTE))save(K_NOTE,{});
+if(!localStorage.getItem(K_WEIGHT))save(K_WEIGHT,{});
+if(!localStorage.getItem(K_WORKOUT))save(K_WORKOUT,{});
+if(!localStorage.getItem(K_PR))save(K_PR,{});
+if(!localStorage.getItem(K_POINTS))save(K_POINTS,{});
+if(!localStorage.getItem(K_BADGES))save(K_BADGES,{});
+if(!localStorage.getItem(K_EXPENSES))save(K_EXPENSES,[]);
+if(!localStorage.getItem(K_PHOTOS))save(K_PHOTOS,{});
+if(!localStorage.getItem(K_ORDERS))save(K_ORDERS,[]);
+
+let currentUser=null;
+
+/* ========== CLOUD SYNC ========== */
+async function syncPush(){
+  if(!SYNC.enabled||!SYNC.endpoint||SYNC.endpoint.includes('YOUR_BIN'))return;
+  try{
+    const data={};ALL_KEYS.forEach(k=>{data[k]=get(k,null)});data._updated=new Date().toISOString();
+    await fetch(SYNC.endpoint,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':SYNC.apiKey},body:JSON.stringify(data)});
+  }catch(e){console.warn('Cloud push failed:',e.message);}
+}
+async function syncPull(){
+  if(!SYNC.enabled||!SYNC.endpoint||SYNC.endpoint.includes('YOUR_BIN'))return;
+  try{
+    const res=await fetch(SYNC.endpoint+'/latest',{headers:{'X-Master-Key':SYNC.apiKey}});
+    const json=await res.json();const data=json.record||json;
+    ALL_KEYS.forEach(k=>{if(data[k]!==null&&data[k]!==undefined)localStorage.setItem(k,JSON.stringify(data[k]));});
+  }catch(e){console.warn('Cloud pull failed:',e.message);}
+}
+
+/* ========== PASSWORD HASHING (backward compatible) ========== */
+async function hashWithSalt(pw,salt){
+  const salted=salt+'$v1$'+pw;
+  if(window.crypto&&window.crypto.subtle){
+    try{
+      const buf=new TextEncoder().encode(salted);
+      const hash=await crypto.subtle.digest('SHA-256',buf);
+      return 'h$'+Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,'0')).join('');
+    }catch(e){}
+  }
+  let h1=0xdeadbeef,h2=0x41c6ce57;
+  for(let i=0;i<salted.length;i++){const ch=salted.charCodeAt(i);h1=Math.imul(h1^ch,2654435761);h2=Math.imul(h2^ch,1597334677);}
+  h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909);
+  h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);
+  return 'h$'+((h2>>>0).toString(16).padStart(8,'0')+(h1>>>0).toString(16).padStart(8,'0'));
+}
+async function hashPassword(pw){return hashWithSalt(pw,'luna');}
+async function verifyPassword(input,stored){
+  if(!stored)return false;
+  if(!stored.startsWith('h$'))return input===stored;
+  if((await hashWithSalt(input,'luna'))===stored)return true;
+  if((await hashWithSalt(input,'dhina'))===stored)return true;
+  if((await hashWithSalt(input,'dhinagym'))===stored)return true;
+  return false;
+}
+
+/* ========== PAGE NAV ========== */
+function showPage(id){
+  ['loginPage','registerPage','paymentPage','waitingPage','userPage','taskPage','ownerPage','profilePage','storePage']
+  .forEach(x=>document.getElementById(x).classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ========== AUTH ========== */
+async function login(){
+  const u=loginUser.value.trim().toLowerCase();
+  const p=loginPass.value;
+  if(!u||!p){loginMsg.textContent='Please enter username and password';loginMsg.className='error';return;}
+  const users=get(K_USERS,[]);
+  const found=users.find(x=>x.username===u);
+  if(!found||!(await verifyPassword(p,found.password))){loginMsg.textContent='Invalid username or password';loginMsg.className='error';return;}
+  if(!found.password.startsWith('h$')||!(await (async()=>{return (await hashWithSalt(p,'luna'))===found.password})())){
+    found.password=await hashPassword(p);save(K_USERS,users);
+  }
+  currentUser=found;
+  if(found.role==='owner'){openOwner();return;}
+  if(found.payment==='Paid'){openUser();}
+  else if(found.payment==='Awaiting'){openWaiting();}
+  else openPayment();
+}
+
+async function register(){
+  const name=rName.value.trim(),username=rUser.value.trim().toLowerCase(),password=rPass.value,
+        phone=rPhone.value.trim(),age=rAge.value,gender=rGender.value,plan=rPlan.value;
+  if(!name)return setMsg('regMsg','Enter full name');
+  if(!username)return setMsg('regMsg','Enter username');
+  if(password.length<6)return setMsg('regMsg','Password must be at least 6 characters');
+  if(!/^[0-9]{10}$/.test(phone))return setMsg('regMsg','Enter valid 10-digit phone number');
+  if(!age||age<10||age>80)return setMsg('regMsg','Enter valid age');
+  if(!gender)return setMsg('regMsg','Select gender');
+  if(!plan)return setMsg('regMsg','Select membership plan');
+  const users=get(K_USERS,[]);
+  if(users.some(x=>x.username===username))return setMsg('regMsg','Username already exists');
+  const expiry=new Date();expiry.setDate(expiry.getDate()+PLANS[plan].days);
+  const hashed=await hashPassword(password);
+  currentUser={name,username,password:hashed,phone,age,gender,role:'user',plan,payment:'Pending',
+    expiry:expiry.toISOString().slice(0,10),joined:new Date().toISOString().slice(0,10)};
+  users.push(currentUser);save(K_USERS,users);
+  const tasks=get(K_TASK,{});
+  tasks[username]=JSON.parse(JSON.stringify(DEFAULT_TASK));
+  save(K_TASK,tasks);
+  const pays=get(K_PAY,[]);
+  pays.push({username,amount:PLANS[plan].price,method:'UPI / QR',status:'Pending',date:new Date().toISOString().slice(0,10)});
+  save(K_PAY,pays);
+  setMsg('regMsg','Registered successfully. Complete payment.');
+  openPayment();
+}
+
+function setMsg(id,text,isSuccess){
+  const e=document.getElementById(id);e.textContent=text;e.className=isSuccess?'success':'error';
+}
+
+/* ========== PAYMENT ========== */
+function buildUPILink(amount,note){
+  return 'upi://pay?'+['pa='+encodeURIComponent(UPI_ID),'pn='+encodeURIComponent(UPI_NAME),'am='+amount,'cu=INR','tn='+encodeURIComponent(note)].join('&');
+}
+
+function openPayment(){
+  showPage('paymentPage');
+  const amount=PLANS[currentUser.plan].price;
+  const note=`LUNA ${currentUser.plan} - ${currentUser.username}`;
+  const upiLink=buildUPILink(amount,note);
+  payInfo.innerHTML=`${currentUser.name}, your <b style="color:#facc15">${currentUser.plan}</b> plan amount is <b style="color:#4ade80">₹${amount}</b>`;
+  document.getElementById('payMsg').textContent='';
+  document.getElementById('upiPayBtn').setAttribute('data-upi',upiLink);
+  qrBox.innerHTML='';
+  new QRCode(qrBox,{text:upiLink,width:210,height:210,colorDark:'#0b1220',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
+}
+
+function openUPIApp(e){
+  if(e)e.preventDefault();
+  const msg=document.getElementById('payMsg');
+  const link=document.getElementById('upiPayBtn').getAttribute('data-upi');
+  if(!link){msg.textContent='Payment link not ready.';msg.className='error';return;}
+  const isMobile=/Android|iPhone|iPad|iPod|Mobile|Windows Phone/i.test(navigator.userAgent);
+  if(!isMobile){msg.innerHTML='📱 UPI apps only open on <b>mobile devices</b>. Please <b>scan the QR code</b> above.';msg.className='muted';return;}
+  msg.textContent='Opening your UPI app...';msg.className='muted';
+  try{const a=document.createElement('a');a.href=link;a.rel='noopener';document.body.appendChild(a);a.click();document.body.removeChild(a);}
+  catch(err){try{window.location.href=link;}catch(e2){msg.textContent='Could not open UPI app.';msg.className='error';return;}}
+  setTimeout(()=>{if(msg.textContent==='Opening your UPI app...'){msg.innerHTML='Didn\'t open? Try scanning the QR code.';msg.className='muted';}},2000);
+}
+
+function copyUPI(){
+  const msg=document.getElementById('payMsg');
+  const done=()=>{msg.textContent='✅ UPI ID copied';msg.className='success';setTimeout(()=>{msg.textContent='';msg.className='muted';},2500);};
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(UPI_ID).then(done).catch(()=>{msg.textContent='UPI ID: '+UPI_ID;msg.className='muted';});
+  else{msg.textContent='UPI ID: '+UPI_ID;msg.className='muted';}
+}
+
+function markPaid(){
+  const users=get(K_USERS,[]);
+  const user=users.find(x=>x.username===currentUser.username);
+  user.payment='Awaiting';user.paidAt=new Date().toISOString();save(K_USERS,users);
+  const pays=get(K_PAY,[]);
+  pays.forEach(p=>{if(p.username===user.username&&p.status!=='Success'){p.status='Awaiting Approval';p.paidAt=new Date().toISOString();}});
+  save(K_PAY,pays);
+  addNote('owner',`💰 Payment awaiting approval: ${user.name} (${user.username}) • ${user.plan} • ₹${PLANS[user.plan].price}`);
+  currentUser=user;openWaiting();
+}
+
+function openWaiting(){
+  showPage('waitingPage');
+  waitInfo.innerHTML=`Hi <b>${currentUser.name}</b>,<br>your payment has been recorded and is now <b style="color:#38bdf8">waiting for the gym owner's approval</b>.`;
+  document.getElementById('waitMsg').textContent='';
+}
+
+async function refreshWaiting(){
+  if(SYNC.enabled)await syncPull();
+  const users=get(K_USERS,[]);
+  const fresh=users.find(x=>x.username===currentUser.username);
+  if(!fresh){document.getElementById('waitMsg').textContent='Account not found.';return;}
+  currentUser=fresh;
+  if(fresh.payment==='Paid'){
+    document.getElementById('waitMsg').textContent='✅ Approved! Loading dashboard...';
+    document.getElementById('waitMsg').className='success';
+    setTimeout(()=>openUser(),800);
+  }else{
+    document.getElementById('waitMsg').textContent='⏳ Still waiting for owner approval...';
+    document.getElementById('waitMsg').className='muted';
+  }
+}
+
+/* ========== USER DASHBOARD ========== */
+function openUser(){
+  showPage('userPage');
+  welcomeUser.textContent=`Welcome back, ${currentUser.name} 👋`;
+  uPlan.textContent=currentUser.plan;
+  uPay.textContent=currentUser.payment;
+  uPay.className='badge paid';
+  uExpiry.textContent=currentUser.expiry;
+  wlSets.innerHTML='';addSetRow();addSetRow();addSetRow();
+  loadTasks();loadAttendance();loadNotes();loadMemberCard();
+  loadProfile();loadWeightLog();loadPaymentHistory();
+  loadWorkouts();loadPRs();loadBadges();loadPoints();
+  loadHeaderAvatar();loadNotifBadge();checkExpiry();
+}
+
+/* ========== HEADER AVATAR + NOTIF BADGE ========== */
+function loadHeaderAvatar(){
+  const photos=get(K_PHOTOS,{});
+  const btn=document.getElementById('headerAvatar');
+  const photo=photos[currentUser.username];
+  if(photo){
+    btn.innerHTML=`<img src="${photo}" alt="me">`;
+  }else{
+    const initial=(currentUser.name||'U').charAt(0).toUpperCase();
+    btn.textContent=initial;
+  }
+}
+
+function loadNotifBadge(){
+  const notes=get(K_NOTE,{})[currentUser.username]||[];
+  const unread=notes.filter(n=>!n.read).length;
+  const badge=document.getElementById('notifBadge');
+  if(unread>0){badge.style.display='flex';badge.textContent=unread;}
+  else{badge.style.display='none';}
+}
+
+function scrollToNotifications(){
+  /* Mark all as read */
+  const all=get(K_NOTE,{});
+  const mine=all[currentUser.username]||[];
+  mine.forEach(n=>n.read=true);
+  all[currentUser.username]=mine;
+  save(K_NOTE,all);
+  loadNotifBadge();loadNotes();
+  document.getElementById('notificationsCard').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+/* ========== PROFILE PAGE + PHOTO UPLOAD ========== */
+function openProfile(){
+  showPage('profilePage');
+  loadBigAvatar();
+  pName.value=currentUser.name||'';
+  pPhone.value=currentUser.phone||'';
+  pAge.value=currentUser.age||'';
+  pGender.value=currentUser.gender||'';
+  pNewPass.value='';
+  document.getElementById('profMsg').textContent='';
+}
+
+function loadBigAvatar(){
+  const photos=get(K_PHOTOS,{});
+  const big=document.getElementById('bigAvatar');
+  const photo=photos[currentUser.username];
+  if(photo){
+    big.innerHTML=`<img src="${photo}" alt="me">`;
+  }else{
+    const initial=(currentUser.name||'U').charAt(0).toUpperCase();
+    big.innerHTML=initial;
+  }
+}
+
+function uploadPhoto(evt){
+  const file=evt.target.files[0];
+  if(!file)return;
+  if(file.size>2*1024*1024){
+    setMsg('profMsg','Photo too large. Please use an image under 2MB.');
+    return;
+  }
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const photos=get(K_PHOTOS,{});
+    photos[currentUser.username]=e.target.result;
+    save(K_PHOTOS,photos);
+    loadBigAvatar();
+    loadHeaderAvatar();
+    setMsg('profMsg','✅ Photo updated!',true);
+    evt.target.value='';
+  };
+  reader.readAsDataURL(file);
+}
+
+function removePhoto(){
+  const photos=get(K_PHOTOS,{});
+  delete photos[currentUser.username];
+  save(K_PHOTOS,photos);
+  loadBigAvatar();
+  loadHeaderAvatar();
+  setMsg('profMsg','Photo removed',true);
+}
+
+async function updateProfile(){
+  const name=pName.value.trim();
+  const phone=pPhone.value.trim();
+  const age=pAge.value;
+  const gender=pGender.value;
+  const newPass=pNewPass.value;
+  if(!name)return setMsg('profMsg','Enter your full name');
+  if(!/^[0-9]{10}$/.test(phone))return setMsg('profMsg','Enter valid 10-digit phone number');
+  if(!age||age<10||age>80)return setMsg('profMsg','Enter valid age');
+  if(!gender)return setMsg('profMsg','Select gender');
+  if(newPass&&newPass.length<6)return setMsg('profMsg','Password must be at least 6 characters');
+  const users=get(K_USERS,[]);
+  const u=users.find(x=>x.username===currentUser.username);
+  u.name=name;u.phone=phone;u.age=age;u.gender=gender;
+  if(newPass)u.password=await hashPassword(newPass);
+  save(K_USERS,users);
+  currentUser=u;
+  pNewPass.value='';
+  setMsg('profMsg','✅ Profile updated successfully',true);
+  loadHeaderAvatar();
+  welcomeUser.textContent=`Welcome back, ${u.name} 👋`;
+}
+
+/* ========== MEMBER CARD ========== */
+function loadMemberCard(){
+  const u=currentUser;
+  mcName.textContent=u.name;
+  mcPlan.textContent=u.plan;
+  mcExpiry.textContent=u.expiry;
+  const id='LU-'+u.username.toUpperCase().slice(0,8).padStart(8,'0');
+  mcId.textContent=id;mcTail.textContent=id.slice(-4);
+  const expired=new Date(u.expiry)<new Date();
+  mcStatus.textContent=expired?'EXPIRED':'ACTIVE';
+  mcStatus.className=expired?'badge pending':'badge paid';
+  mcQr.innerHTML='';
+  new QRCode(mcQr,{text:`LUNA|${id}|${u.name}|${u.plan}|${u.expiry}`,width:70,height:70});
+}
+
+/* ========== ATTENDANCE ========== */
+function checkIn(){
+  const today=new Date().toISOString().slice(0,10);
+  const att=get(K_ATT,[]);
+  if(att.find(x=>x.username===currentUser.username&&x.date===today)){
+    checkMsg.textContent='You have already checked in today';
+    checkMsg.className='error';return;
+  }
+  att.push({username:currentUser.username,name:currentUser.name,date:today,time:new Date().toLocaleTimeString(),status:'Success'});
+  save(K_ATT,att);
+  checkMsg.textContent='✅ Check-in successful — +10 pts earned!';
+  checkMsg.className='success';
+  addPoints(currentUser.username,10);
+  checkCheckinBadges(currentUser.username);
+  loadAttendance();loadBadges();loadPoints();
+}
+
+function loadAttendance(){
+  const att=get(K_ATT,[]).filter(x=>x.username===currentUser.username);
+  uCount.textContent=att.length;
+  uStreak.textContent=calcStreak(currentUser.username);
+  attTable.innerHTML=`
+    <tr><th>Date</th><th>Time</th><th>Status</th></tr>
+    ${att.slice().reverse().map(a=>`<tr><td>${a.date}</td><td>${a.time}</td><td>${a.status}</td></tr>`).join('')||'<tr><td colspan="3" class="muted">No check-ins yet</td></tr>'}
+  `;
+}
+
+function calcStreak(username){
+  const dates=[...new Set(get(K_ATT,[]).filter(x=>x.username===username).map(x=>x.date))].sort().reverse();
+  if(!dates.length)return 0;
+  const today=new Date().toISOString().slice(0,10);
+  const yest=new Date(Date.now()-86400000).toISOString().slice(0,10);
+  if(dates[0]!==today&&dates[0]!==yest)return 0;
+  let streak=1;
+  for(let i=1;i<dates.length;i++){
+    const prev=new Date(dates[i-1]);prev.setDate(prev.getDate()-1);
+    if(prev.toISOString().slice(0,10)===dates[i])streak++;
+    else break;
+  }
+  return streak;
+}
+
+/* ========== POINTS + BADGES ========== */
+function addPoints(username,n){
+  const pts=get(K_POINTS,{});
+  pts[username]=(pts[username]||0)+n;
+  save(K_POINTS,pts);
+}
+function loadPoints(){
+  const pts=get(K_POINTS,{});
+  uPoints.textContent=pts[currentUser.username]||0;
+}
+function awardBadge(username,id){
+  const badges=get(K_BADGES,{});
+  badges[username]=badges[username]||[];
+  if(badges[username].includes(id))return false;
+  badges[username].push(id);
+  save(K_BADGES,badges);
+  addPoints(username,50);
+  addNote(username,`🏅 Achievement unlocked: ${BADGES[id].name} (+50 pts)`);
+  return true;
+}
+function checkCheckinBadges(username){
+  const count=get(K_ATT,[]).filter(x=>x.username===username).length;
+  const streak=calcStreak(username);
+  const hr=new Date().getHours();
+  if(count>=1)awardBadge(username,'first_checkin');
+  if(count>=10)awardBadge(username,'checkins_10');
+  if(count>=50)awardBadge(username,'checkins_50');
+  if(count>=100)awardBadge(username,'checkins_100');
+  if(streak>=7)awardBadge(username,'streak_7');
+  if(streak>=30)awardBadge(username,'streak_30');
+  if(hr<7)awardBadge(username,'early_bird');
+  if(hr>=21)awardBadge(username,'night_owl');
+}
+function checkWorkoutBadges(username){
+  const count=(get(K_WORKOUT,{})[username]||[]).length;
+  const prs=Object.keys(get(K_PR,{})[username]||{}).length;
+  if(count>=1)awardBadge(username,'first_workout');
+  if(count>=10)awardBadge(username,'workouts_10');
+  if(prs>=1)awardBadge(username,'pr_first');
+  if(prs>=5)awardBadge(username,'pr_5');
+}
+function loadBadges(){
+  const earned=get(K_BADGES,{})[currentUser.username]||[];
+  badgeGrid.innerHTML=Object.keys(BADGES).map(id=>{
+    const b=BADGES[id];const got=earned.includes(id);
+    return `<div class="badge-item ${got?'earned':''}"><span class="ico">${b.icon}</span><b>${b.name}</b><small>${b.desc}</small></div>`;
+  }).join('');
+}
+
+/* ========== WORKOUT LOGGER ========== */
+function addSetRow(){
+  const div=document.createElement('div');
+  div.className='set-row';
+  div.innerHTML=`<input class="wl-reps" type="number" placeholder="Reps" min="1"><input class="wl-weight" type="number" placeholder="Weight (kg)" step="0.5" min="0"><button class="btn red" onclick="this.parentElement.remove()">×</button>`;
+  wlSets.appendChild(div);
+}
+
+function saveWorkout(){
+  const ex=wlExercise.value.trim();
+  if(!ex)return setMsg('wlMsg','Enter exercise name');
+  const rows=[...wlSets.querySelectorAll('.set-row')];
+  const sets=rows.map(r=>({reps:+r.querySelector('.wl-reps').value||0,weight:+r.querySelector('.wl-weight').value||0})).filter(s=>s.reps>0);
+  if(!sets.length)return setMsg('wlMsg','Add at least one set with reps');
+  const logs=get(K_WORKOUT,{});
+  logs[currentUser.username]=logs[currentUser.username]||[];
+  logs[currentUser.username].unshift({id:Date.now(),date:new Date().toISOString().slice(0,10),time:new Date().toLocaleTimeString(),exercise:ex,sets});
+  save(K_WORKOUT,logs);
+  const prs=get(K_PR,{});
+  prs[currentUser.username]=prs[currentUser.username]||{};
+  const maxWeight=Math.max(...sets.map(s=>s.weight));
+  const bestSet=sets.find(s=>s.weight===maxWeight);
+  let newPR=false;
+  const existing=prs[currentUser.username][ex];
+  if(maxWeight>0&&(!existing||maxWeight>existing.weight)){
+    prs[currentUser.username][ex]={weight:maxWeight,reps:bestSet.reps,date:new Date().toISOString().slice(0,10)};
+    save(K_PR,prs);newPR=true;
+  }
+  addPoints(currentUser.username,15);
+  if(newPR)addPoints(currentUser.username,25);
+  checkWorkoutBadges(currentUser.username);
+  wlExercise.value='';wlSets.innerHTML='';addSetRow();addSetRow();addSetRow();
+  setMsg('wlMsg',newPR?'🎉 New PR! Workout saved.':'✅ Workout saved. +15 pts',true);
+  loadWorkouts();loadPRs();loadBadges();loadPoints();
+}
+
+function loadWorkouts(){
+  const logs=get(K_WORKOUT,{})[currentUser.username]||[];
+  wlHistory.innerHTML=`
+    <tr><th>Date</th><th>Exercise</th><th>Sets</th><th></th></tr>
+    ${logs.length?logs.slice(0,20).map(w=>{
+      const summary=w.sets.map(s=>`${s.reps}×${s.weight}kg`).join(', ');
+      return `<tr><td>${w.date}</td><td><b>${w.exercise}</b></td><td class="muted">${summary}</td>
+        <td><button class="btn red" style="padding:6px 10px;font-size:11px" onclick="delWorkout(${w.id})">Del</button></td></tr>`;
+    }).join(''):'<tr><td colspan="4" class="muted">No workouts logged yet</td></tr>'}
+  `;
+}
+function delWorkout(id){
+  const logs=get(K_WORKOUT,{});
+  logs[currentUser.username]=(logs[currentUser.username]||[]).filter(w=>w.id!==id);
+  save(K_WORKOUT,logs);loadWorkouts();
+}
+function loadPRs(){
+  const prs=get(K_PR,{})[currentUser.username]||{};
+  const list=Object.keys(prs).map(k=>({exercise:k,...prs[k]}));
+  prTable.innerHTML=`
+    <tr><th>Exercise</th><th>Best Weight</th><th>Reps</th><th>Date</th></tr>
+    ${list.length?list.map(p=>`<tr><td><b>${p.exercise}</b></td><td style="color:#facc15;font-weight:800">${p.weight} kg</td><td>${p.reps}</td><td class="muted">${p.date}</td></tr>`).join(''):'<tr><td colspan="4" class="muted">No PRs yet — log a workout to set one!</td></tr>'}
+  `;
+}
+
+/* ========== TASKS (default plan for new members) ========== */
+function loadTasks(){
+  const tasks=get(K_TASK,{});
+  const my=tasks[currentUser.username]||DEFAULT_TASK;
+  taskList.innerHTML=DAYS.map(day=>`
+    <div class="task">
+      <b>${day}</b><br>
+      <input id="t_${day}" value="${my[day]||''}">
+      <button class="btn gray" onclick="saveTask('${day}')">Save</button>
+    </div>
+  `).join('');
+}
+function saveTask(day){
+  const tasks=get(K_TASK,{});
+  tasks[currentUser.username]=tasks[currentUser.username]||JSON.parse(JSON.stringify(DEFAULT_TASK));
+  tasks[currentUser.username][day]=document.getElementById('t_'+day).value;
+  save(K_TASK,tasks);loadTasks();
+}
+
+/* ========== NOTES ========== */
+function addNote(username,text){
+  const notes=get(K_NOTE,{});
+  notes[username]=notes[username]||[];
+  notes[username].unshift({text,date:new Date().toISOString().slice(0,10),read:false});
+  save(K_NOTE,notes);
+}
+function loadNotes(){
+  const notes=get(K_NOTE,{})[currentUser.username]||[];
+  notifyList.innerHTML=notes.length?
+    notes.map(n=>`<div class="notif-item"><span class="dot" style="${n.read?'opacity:.2':''}"></span><div style="flex:1"><p style="font-size:13px;color:#e8edf7">${n.text}</p><p class="muted" style="font-size:11px">${n.date}</p></div></div>`).join(''):
+    '<p class="muted">No notifications</p>';
+}
+function checkExpiry(){
+  const days=Math.ceil((new Date(currentUser.expiry)-new Date())/(1000*60*60*24));
+  if(days<=7&&days>=0){addNote(currentUser.username,`Your ${currentUser.plan} plan expires in ${days} day(s).`);loadNotes();loadNotifBadge();}
+}
+
+/* ========== HEALTH ========== */
+function calcBMI(){
+  const h=parseFloat(hHeight.value)/100;const w=parseFloat(hWeight.value);
+  if(!h||!w||h<=0)return setMsg('bmiMsg','Enter valid height and weight');
+  const bmi=+(w/(h*h)).toFixed(1);
+  let cat='Normal';
+  if(bmi<18.5)cat='Underweight';
+  else if(bmi<25)cat='Normal';
+  else if(bmi<30)cat='Overweight';
+  else cat='Obese';
+  setMsg('bmiMsg',`BMI: ${bmi} — ${cat}`,true);
+  const logs=get(K_WEIGHT,{});
+  logs[currentUser.username]=logs[currentUser.username]||[];
+  logs[currentUser.username].unshift({date:new Date().toISOString().slice(0,10),weight:w,bmi,category:cat});
+  save(K_WEIGHT,logs);hHeight.value='';hWeight.value='';
+  loadWeightLog();
+}
+function loadWeightLog(){
+  const logs=get(K_WEIGHT,{})[currentUser.username]||[];
+  weightTable.innerHTML=`
+    <tr><th>Date</th><th>Weight (kg)</th><th>BMI</th><th>Category</th></tr>
+    ${logs.length?logs.map(l=>`<tr><td>${l.date}</td><td>${l.weight}</td><td>${l.bmi}</td><td>${l.category}</td></tr>`).join(''):'<tr><td colspan="4" class="muted">No entries yet</td></tr>'}
+  `;
+}
+
+/* ========== PAYMENT HISTORY ========== */
+function loadPaymentHistory(){
+  const pays=get(K_PAY,[]).filter(p=>p.username===currentUser.username).reverse();
+  payTable.innerHTML=`
+    <tr><th>Date</th><th>Amount</th><th>Method</th><th>Status</th></tr>
+    ${pays.length?pays.map(p=>{
+      const cls=p.status==='Success'?'paid':p.status==='Awaiting Approval'?'awaiting':'pending';
+      return `<tr><td>${p.date}</td><td>₹${p.amount}</td><td>${p.method}</td><td><span class="badge ${cls}">${p.status}</span></td></tr>`;
+    }).join(''):'<tr><td colspan="4" class="muted">No payments yet</td></tr>'}
+  `;
+}
+
+/* ========== STORE ========== */
+function openStore(){
+  showPage('storePage');
+  renderProducts();
+  renderMyOrders();
+}
+
+function renderProducts(){
+  productGrid.innerHTML=STORE_PRODUCTS.map(p=>`
+    <div class="product-card">
+      <span class="product-emoji">${p.emoji}</span>
+      <div class="product-name">${p.name}</div>
+      <div class="product-desc">${p.desc}</div>
+      <div class="product-price">₹${p.price}<span class="product-mrp">₹${p.mrp}</span></div>
+      <button class="btn green small" style="width:100%" onclick="buyProduct('${p.id}')">🛒 Order Now</button>
+    </div>
+  `).join('');
+}
+
+function buyProduct(id){
+  const p=STORE_PRODUCTS.find(x=>x.id===id);
+  if(!p)return;
+  const orders=get(K_ORDERS,[]);
+  orders.unshift({
+    id:Date.now(),
+    username:currentUser.username,
+    memberName:currentUser.name,
+    productId:p.id,
+    productName:p.name,
+    emoji:p.emoji,
+    price:p.price,
+    mrp:p.mrp,
+    status:'Pending',
+    date:new Date().toISOString().slice(0,10)
+  });
+  save(K_ORDERS,orders);
+  addNote(currentUser.username,`🛒 Order placed: ${p.name} (₹${p.price}). Collect at gym counter.`);
+  alert(`✅ Order placed!\n\n${p.name}\nPrice: ₹${p.price} (MRP ₹${p.mrp})\n\nCollect & pay at the gym counter.`);
+  renderMyOrders();
+}
+
+function renderMyOrders(){
+  const list=get(K_ORDERS,[]).filter(o=>o.username===currentUser.username);
+  myOrdersTable.innerHTML=`
+    <tr><th>Date</th><th>Product</th><th>Price</th><th>Status</th></tr>
+    ${list.length?list.map(o=>{
+      const cls=o.status==='Delivered'?'delivered':o.status==='Ready'?'awaiting':'pending';
+      return `<tr><td>${o.date}</td><td>${o.emoji} ${o.productName}</td><td>₹${o.price}</td><td><span class="badge ${cls}">${o.status}</span></td></tr>`;
+    }).join(''):'<tr><td colspan="4" class="muted">No orders yet</td></tr>'}
+  `;
+}
+
+/* ========== OWNER ========== */
+function openOwner(){
+  showPage('ownerPage');
+  renderOwnerStats();renderMembers();renderOwnerWorkouts();renderExpiring();
+  renderRevenueChart();renderExpenses();renderLeaderboard();renderOrders();
+}
+
+function renderOwnerStats(){
+  const users=get(K_USERS,[]).filter(x=>x.role==='user');
+  const att=get(K_ATT,[]);const today=new Date().toISOString().slice(0,10);
+  const pays=get(K_PAY,[]).filter(p=>p.status==='Success');
+  const revenue=pays.reduce((s,p)=>s+Number(p.amount||0),0);
+  const expenses=get(K_EXPENSES,[]).reduce((s,e)=>s+Number(e.amount||0),0);
+  oMembers.textContent=users.length;
+  oPaid.textContent=users.filter(x=>x.payment==='Paid').length;
+  oAwaiting.textContent=users.filter(x=>x.payment==='Awaiting').length;
+  oPending.textContent=users.filter(x=>x.payment==='Pending').length;
+  oToday.textContent=att.filter(x=>x.date===today).length;
+  oRevenue.textContent='₹'+revenue;
+  oExpenses.textContent='₹'+expenses;
+  oProfit.textContent='₹'+(revenue-expenses);
+  oProfit.style.color=(revenue-expenses)>=0?'#4ade80':'#f87171';
+}
+
+function renderMembers(filter){
+  filter=(filter||'').trim().toLowerCase();
+  let users=get(K_USERS,[]).filter(x=>x.role==='user');
+  if(filter)users=users.filter(u=>u.name.toLowerCase().includes(filter)||u.username.toLowerCase().includes(filter)||(u.phone||'').includes(filter));
+  ownerTable.innerHTML=`
+    <tr><th>Name</th><th>Username</th><th>Plan</th><th>Payment</th><th>Action</th></tr>
+    ${users.length?users.map(u=>{
+      const cls=u.payment==='Paid'?'paid':u.payment==='Awaiting'?'awaiting':'pending';
+      let action;
+      if(u.payment==='Paid')action='<span class="muted">—</span>';
+      else if(u.payment==='Awaiting')action=`<button class="btn green" onclick="approve('${u.username}')">✓ Approve</button>`;
+      else action=`<button class="btn blue" onclick="approve('${u.username}')">Mark Paid</button>`;
+      return `<tr><td>${u.name}</td><td>${u.username}</td><td>${u.plan}</td><td><span class="badge ${cls}">${u.payment}</span></td><td>${action}</td></tr>`;
+    }).join(''):'<tr><td colspan="5" class="muted">No matching members</td></tr>'}
+  `;
+}
+
+function renderOwnerWorkouts(){
+  const users=get(K_USERS,[]).filter(x=>x.role==='user');
+  const tasks=get(K_TASK,{});
+  ownerWorkouts.innerHTML=users.map(u=>{
+    const t=tasks[u.username]||DEFAULT_TASK;
+    return `<div class="task"><b>${u.name}</b><p class="muted" style="font-size:12px">${DAYS.map(d=>`${d}: ${t[d]}`).join(' | ')}</p></div>`;
+  }).join('')||'<p class="muted">No members yet</p>';
+}
+
+function renderExpiring(){
+  const users=get(K_USERS,[]).filter(x=>x.role==='user');
+  const list=users.filter(u=>Math.ceil((new Date(u.expiry)-new Date())/(1000*60*60*24))<=7);
+  expiringList.innerHTML=list.length?list.map(u=>{
+    const days=Math.ceil((new Date(u.expiry)-new Date())/(1000*60*60*24));
+    const tag=days<0?'EXPIRED':`${days} day(s) left`;
+    return `<div class="task"><b>${u.name}</b><p class="muted">${tag} • Expires ${u.expiry}</p></div>`;
+  }).join(''):'<p class="muted">No expiring members</p>';
+}
+
+function renderRevenueChart(){
+  const pays=get(K_PAY,[]).filter(p=>p.status==='Success');
+  const months=[];const now=new Date();
+  for(let i=5;i>=0;i--){const d=new Date(now.getFullYear(),now.getMonth()-i,1);months.push({key:d.toISOString().slice(0,7),label:d.toLocaleString('en',{month:'short'}),total:0});}
+  pays.forEach(p=>{const k=(p.date||'').slice(0,7);const m=months.find(x=>x.key===k);if(m)m.total+=Number(p.amount||0);});
+  const max=Math.max(...months.map(m=>m.total),1);
+  revChart.innerHTML=`<div style="display:flex;gap:10px;align-items:flex-end;padding:0 4px">${months.map(m=>{
+    const h=(m.total/max)*100;
+    return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px">
+      <div style="font-size:11px;color:#facc15;font-weight:700">₹${m.total}</div>
+      <div class="rev-bar"><div class="rev-fill" style="height:${Math.max(h,3)}%"></div></div>
+      <div style="font-size:11px;color:#93a1b8;font-weight:600">${m.label}</div>
+    </div>`;
+  }).join('')}</div`;
+}
+
+function addExpense(){
+  const cat=expCategory.value,amt=parseFloat(expAmount.value),note=expNote.value.trim();
+  if(!cat)return setMsg('expMsg','Select category');
+  if(!amt||amt<=0)return setMsg('expMsg','Enter valid amount');
+  const list=get(K_EXPENSES,[]);
+  list.unshift({id:Date.now(),category:cat,amount:amt,note,date:new Date().toISOString().slice(0,10)});
+  save(K_EXPENSES,list);expAmount.value='';expNote.value='';
+  setMsg('expMsg','✅ Expense added',true);
+  renderExpenses();renderOwnerStats();
+}
+function renderExpenses(){
+  const list=get(K_EXPENSES,[]);
+  expTable.innerHTML=`
+    <tr><th>Date</th><th>Category</th><th>Amount</th><th>Note</th><th></th></tr>
+    ${list.length?list.map(e=>`<tr><td>${e.date}</td><td>${e.category}</td><td style="color:#f87171;font-weight:700">₹${e.amount}</td><td class="muted">${e.note||'—'}</td><td><button class="btn red" style="padding:6px 10px;font-size:11px" onclick="delExpense(${e.id})">Del</button></td></tr>`).join(''):'<tr><td colspan="5" class="muted">No expenses logged</td></tr>'}
+  `;
+}
+function delExpense(id){
+  const list=get(K_EXPENSES,[]).filter(e=>e.id!==id);
+  save(K_EXPENSES,list);renderExpenses();renderOwnerStats();
+}
+
+function renderOrders(){
+  const list=get(K_ORDERS,[]);
+  ordersTable.innerHTML=`
+    <tr><th>Date</th><th>Member</th><th>Product</th><th>Price</th><th>Status</th><th></th></tr>
+    ${list.length?list.map(o=>{
+      const cls=o.status==='Delivered'?'delivered':o.status==='Ready'?'awaiting':'pending';
+      let action='';
+      if(o.status==='Pending')action=`<button class="btn blue small" onclick="updateOrder(${o.id},'Ready')">Mark Ready</button>`;
+      else if(o.status==='Ready')action=`<button class="btn green small" onclick="updateOrder(${o.id},'Delivered')">Deliver</button>`;
+      else action='<span class="muted">—</span>';
+      return `<tr><td>${o.date}</td><td>${o.memberName}</td><td>${o.emoji} ${o.productName}</td><td>₹${o.price}</td><td><span class="badge ${cls}">${o.status}</span></td><td>${action}</td></tr>`;
+    }).join(''):'<tr><td colspan="6" class="muted">No orders yet</td></tr>'}
+  `;
+}
+function updateOrder(id,status){
+  const list=get(K_ORDERS,[]);
+  const o=list.find(x=>x.id===id);
+  if(o){
+    o.status=status;
+    save(K_ORDERS,list);
+    addNote(o.username,`🛒 Your order "${o.productName}" is now ${status}!`);
+    renderOrders();
+  }
+}
+
+function renderLeaderboard(){
+  const users=get(K_USERS,[]).filter(x=>x.role==='user');
+  const pts=get(K_POINTS,{});const badges=get(K_BADGES,{});
+  const sorted=users.map(u=>({name:u.name,username:u.username,points:pts[u.username]||0,badges:(badges[u.username]||[]).length})).sort((a,b)=>b.points-a.points).slice(0,10);
+  leaderboardTable.innerHTML=`
+    <tr><th>#</th><th>Member</th><th>Points</th><th>Badges</th></tr>
+    ${sorted.length?sorted.map((u,i)=>`<tr>
+      <td style="font-size:18px">${i===0?'🥇':i===1?'🥈':i===2?'🥉':'#'+(i+1)}</td>
+      <td><b>${u.name}</b></td>
+      <td style="color:#facc15;font-weight:800">${u.points}</td>
+      <td>${u.badges}</td>
+    </tr>`).join(''):'<tr><td colspan="4" class="muted">No members yet</td></tr>'}
+  `;
+}
+
+function approve(username){
+  const users=get(K_USERS,[]);
+  const user=users.find(x=>x.username===username);
+  user.payment='Paid';user.approvedAt=new Date().toISOString();
+  save(K_USERS,users);
+  const pays=get(K_PAY,[]);
+  pays.forEach(p=>{if(p.username===username&&p.status!=='Success')p.status='Success';});
+  save(K_PAY,pays);
+  addNote(username,'✅ Your payment has been approved. Welcome to LUNA!');
+  openOwner();
+}
+
+function broadcast(){
+  const text=bcastText.value.trim();
+  if(!text)return setMsg('bcastMsg','Type something to broadcast');
+  const users=get(K_USERS,[]).filter(x=>x.role==='user');
+  users.forEach(u=>addNote(u.username,'📢 '+text));
+  bcastText.value='';
+  setMsg('bcastMsg',`Sent to ${users.length} member(s)`,true);
+}
+
+function exportData(){
+  const data={};ALL_KEYS.forEach(k=>data[k]=get(k,null));
+  data.exported=new Date().toISOString();
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='luna-backup-'+new Date().toISOString().slice(0,10)+'.json';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+}
+
+function logout(){
+  currentUser=null;
+  loginUser.value='';loginPass.value='';loginMsg.textContent='';
+  showPage('loginPage');
+}
+
+/* ========== PWA ========== */
+(function setupPWA(){
+  const icon=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#facc15"/><stop offset="1" stop-color="#ff6b35"/></linearGradient></defs><rect width="192" height="192" rx="44" fill="#0b1220"/><text x="96" y="128" font-size="100" text-anchor="middle" font-family="Arial,sans-serif" font-weight="800" fill="url(#g)">L</text></svg>`;
+  const iconUrl='data:image/svg+xml;base64,'+btoa(icon);
+  const manifest={name:'LUNA',short_name:'Luna',start_url:'.',display:'standalone',background_color:'#070b14',theme_color:'#070b14',orientation:'portrait',description:'LUNA — Manage your fitness journey.',icons:[{src:iconUrl,sizes:'192x192',type:'image/svg+xml',purpose:'any'},{src:iconUrl,sizes:'512x512',type:'image/svg+xml',purpose:'any'}]};
+  const blob=new Blob([JSON.stringify(manifest)],{type:'application/manifest+json'});
+  document.getElementById('manifestLink').href=URL.createObjectURL(blob);
+  let deferredPrompt=null;
+  const bar=document.getElementById('installBar');
+  window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;bar.style.display='flex';});
+  window.doInstall=async function(){
+    if(!deferredPrompt){bar.style.display='none';return;}
+    deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;bar.style.display='none';
+  };
+  window.addEventListener('appinstalled',()=>{bar.style.display='none';});
+})();
+
+(async function init(){await syncPull();showPage('loginPage');})();
+</script>
+</body>
+</html>

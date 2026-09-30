@@ -1,4 +1,10 @@
+<<<<<<< HEAD
 node_modules
 .env
 .vercel
+=======
+node_modules
+.env
+.vercel
+>>>>>>> 0753a7864268313f70fcba53242a33e333026a7e
 .next
