@@ -1,0 +1,20 @@
+{
+  "name": "luna-gym",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod",
+    "db:push": "prisma db push",
+    "db:generate": "prisma generate"
+  },
+  "dependencies": {
+    "@prisma/client": "5.22.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "prisma": "5.22.0"
+  },
+  "devDependencies": {
+    "vercel": "^37.0.0"
+  }
+}
