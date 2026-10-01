@@ -109,31 +109,23 @@ tr:hover td{background:rgba(255,255,255,.035)}
 @keyframes spin{to{transform:rotate(360deg)}}
 .reg-cta{background:linear-gradient(135deg,rgba(250,204,21,.12),rgba(255,107,53,.08));border:1px solid rgba(250,204,21,.3);border-radius:16px;padding:16px;text-align:center;margin-top:14px}
 .reg-cta p{font-size:13px;color:#e8edf7;margin-bottom:10px}
-
-/* NEW: Header icons */
 .icon-btn{position:relative;width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.07);border:1px solid var(--line);color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
 .icon-btn:hover{background:rgba(255,255,255,.14);transform:translateY(-2px)}
 .notif-badge{position:absolute;top:-4px;right:-4px;background:linear-gradient(135deg,#ff6b35,#facc15);color:#1a1004;font-size:10px;font-weight:800;min-width:18px;height:18px;padding:0 5px;border-radius:99px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 10px -3px rgba(255,107,53,.9)}
 .avatar-btn{width:42px;height:42px;border-radius:50%;overflow:hidden;background:linear-gradient(135deg,#ff6b35,#facc15);border:2px solid rgba(250,204,21,.5);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:#1a1004;transition:all .2s;padding:0}
 .avatar-btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px -8px rgba(250,204,21,.8)}
 .avatar-btn img{width:100%;height:100%;object-fit:cover;display:block}
-
-/* NEW: Big avatar in profile */
 .avatar-wrap{text-align:center;margin:10px 0 18px}
 .avatar-big{width:130px;height:130px;border-radius:50%;margin:0 auto;overflow:hidden;background:linear-gradient(135deg,#ff6b35,#facc15);border:4px solid rgba(250,204,21,.35);display:flex;align-items:center;justify-content:center;font-size:52px;font-weight:800;color:#1a1004;cursor:pointer;position:relative;transition:all .3s;box-shadow:0 20px 40px -18px rgba(250,204,21,.5)}
 .avatar-big:hover{transform:scale(1.03);box-shadow:0 26px 50px -18px rgba(250,204,21,.7)}
 .avatar-big img{width:100%;height:100%;object-fit:cover;display:block}
 .avatar-big::after{content:'📷';position:absolute;bottom:6px;right:6px;background:rgba(0,0,0,.65);width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;border:2px solid rgba(255,255,255,.25)}
-
-/* NEW: Info / explainer card */
 .explain-row{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06)}
 .explain-row:last-child{border-bottom:none}
 .explain-ico{font-size:22px;flex-shrink:0;width:36px;text-align:center}
 .explain-txt{flex:1}
 .explain-txt b{font-size:13px;color:#facc15;display:block;margin-bottom:2px}
 .explain-txt span{font-size:12px;color:var(--muted);line-height:1.5}
-
-/* NEW: Store product grid */
 .product-grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));margin-top:10px}
 .product-card{background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:16px;text-align:center;transition:all .28s;overflow:hidden;position:relative}
 .product-card:hover{transform:translateY(-4px);border-color:rgba(250,204,21,.4);box-shadow:0 22px 40px -26px #000}
@@ -142,13 +134,11 @@ tr:hover td{background:rgba(255,255,255,.035)}
 .product-desc{font-size:11px;color:var(--muted);margin-bottom:8px;line-height:1.4}
 .product-price{font-size:19px;font-weight:800;color:#facc15;margin-bottom:10px}
 .product-mrp{font-size:11px;color:#94a3b8;text-decoration:line-through;margin-left:6px;font-weight:500}
-.cart-bar{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#16a34a,#4ade80);color:#fff;padding:12px 22px;border-radius:99px;font-weight:800;font-size:14px;box-shadow:0 18px 40px -14px rgba(34,197,94,1);cursor:pointer;z-index:98;display:none;align-items:center;gap:10px}
-.cart-bar:hover{transform:translateX(-50%) translateY(-2px)}
-
-/* NEW: Notification list drawer */
 .notif-item{background:linear-gradient(160deg,rgba(255,255,255,.065),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:8px;display:flex;gap:10px;align-items:flex-start}
 .notif-item .dot{width:8px;height:8px;border-radius:50%;background:#facc15;margin-top:6px;flex-shrink:0;box-shadow:0 0 10px rgba(250,204,21,.7)}
-
+.live-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#4ade80;margin-right:6px;animation:livePulse 1.5s ease-in-out infinite;box-shadow:0 0 10px rgba(74,222,128,.8)}
+@keyframes livePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
+.sync-status{font-size:11px;color:#4ade80;font-weight:600;display:flex;align-items:center;gap:6px}
 ::-webkit-scrollbar{width:10px;height:10px}
 ::-webkit-scrollbar-track{background:#0a1120}
 ::-webkit-scrollbar-thumb{background:#22304a;border-radius:99px}
@@ -256,7 +246,6 @@ tr:hover td{background:rgba(255,255,255,.035)}
     </div>
   </div>
 
-  <!-- QUICK ACTIONS -->
   <div class="card">
     <h3>Quick Actions</h3>
     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
@@ -266,11 +255,9 @@ tr:hover td{background:rgba(255,255,255,.035)}
     </div>
   </div>
 
-  <!-- HOW POINTS & STREAK WORK -->
   <div class="card">
     <h3>🎯 How Points & Streak Work</h3>
     <p class="muted" style="margin-bottom:12px">Stay consistent, earn points, unlock rewards.</p>
-
     <div class="explain-row"><div class="explain-ico">✅</div><div class="explain-txt"><b>Daily Check-in — +10 pts</b><span>Tap "Check In Now" once per day when you arrive at the gym.</span></div></div>
     <div class="explain-row"><div class="explain-ico">🏋️</div><div class="explain-txt"><b>Log a Workout — +15 pts</b><span>Open Workout Logger and save any exercise with at least one set.</span></div></div>
     <div class="explain-row"><div class="explain-ico">📈</div><div class="explain-txt"><b>New Personal Record — +25 pts</b><span>Lift more weight than your previous best on any exercise.</span></div></div>
@@ -360,43 +347,37 @@ tr:hover td{background:rgba(255,255,255,.035)}
   </div>
 </div>
 
-<!-- PROFILE PAGE (NEW) -->
+<!-- PROFILE PAGE -->
 <div id="profilePage" class="card hidden" style="max-width:560px">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
     <h2>My Profile</h2>
     <button class="btn gray small" onclick="showPage('userPage')">← Back</button>
   </div>
-
   <div class="avatar-wrap">
     <div class="avatar-big" id="bigAvatar" onclick="document.getElementById('photoInput').click()">👤</div>
     <p class="muted" style="margin-top:10px">Tap to change profile photo</p>
     <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="uploadPhoto(event)">
     <button class="btn gray small" style="margin-top:8px" onclick="removePhoto()">Remove Photo</button>
   </div>
-
   <h3>Basic Info</h3>
   <input id="pName" placeholder="Full name">
   <input id="pPhone" placeholder="Phone number">
   <input id="pAge" type="number" placeholder="Age">
   <select id="pGender"><option value="">Select gender</option><option>Male</option><option>Female</option><option>Other</option></select>
-
   <h3 style="margin-top:14px">Change Password</h3>
   <input id="pNewPass" type="password" placeholder="New password (leave blank to keep)">
-
   <button class="btn" style="width:100%;margin-top:8px" onclick="updateProfile()">💾 Save Changes</button>
   <p id="profMsg" class="muted center"></p>
 </div>
 
-<!-- STORE PAGE (NEW) -->
+<!-- STORE PAGE -->
 <div id="storePage" class="card hidden">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
     <h2>🛒 LUNA Store</h2>
     <button class="btn gray small" onclick="showPage('userPage')">← Back</button>
   </div>
   <p class="muted">Order supplements &amp; gear — collect &amp; pay at the gym counter.</p>
-
   <div class="product-grid" id="productGrid"></div>
-
   <h3 style="margin-top:24px">My Orders</h3>
   <div class="scroll" style="margin-top:12px"><table id="myOrdersTable"></table></div>
 </div>
@@ -415,7 +396,8 @@ tr:hover td{background:rgba(255,255,255,.035)}
 <div id="ownerPage" class="card hidden">
   <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;align-items:center">
     <h2 style="letter-spacing:4px">LUNA • Owner</h2>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <span class="sync-status" id="syncStatus"><span class="live-dot"></span>Live</span>
       <button class="btn gray" onclick="exportData()">⬇ Backup</button>
       <button class="btn gray" onclick="logout()">Logout</button>
     </div>
@@ -493,8 +475,8 @@ tr:hover td{background:rgba(255,255,255,.035)}
 /* ========== CONFIG ========== */
 const SYNC={
   enabled:true,
-  endpoint:'https://YOUR-PROJECT.vercel.app/api/sync',
-  apiKey:'THE-SAME-STRING-AS-SYNC_API_KEY'
+  endpoint:'https://luna-gym01.vercel.app/api/sync',
+  apiKey:'luna_super_secret_key_2025'
 };
 
 const K_USERS='dg_users',K_ATT='dg_attendance',K_TASK='dg_tasks',K_PAY='dg_payments',K_NOTE='dg_notes',
@@ -539,7 +521,6 @@ const BADGES={
   night_owl:{name:'Night Owl',icon:'🌙',desc:'Check in after 9 PM'}
 };
 
-/* ========== STORE PRODUCTS (with fixed MRP) ========== */
 const STORE_PRODUCTS=[
   {id:'protein',   name:'Whey Protein 1kg',   mrp:2499, price:1999, emoji:'🥛', desc:'24g protein per scoop'},
   {id:'creatine',  name:'Creatine 250g',       mrp:999,  price:799,  emoji:'💊', desc:'Pure micronized creatine'},
@@ -578,16 +559,53 @@ async function syncPush(){
   if(!SYNC.enabled||!SYNC.endpoint||SYNC.endpoint.includes('YOUR_BIN'))return;
   try{
     const data={};ALL_KEYS.forEach(k=>{data[k]=get(k,null)});data._updated=new Date().toISOString();
-    await fetch(SYNC.endpoint,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':SYNC.apiKey},body:JSON.stringify(data)});
+    await fetch(SYNC.endpoint,{method:'PUT',headers:{'Content-Type':'application/json','X-Api-Key':SYNC.apiKey},body:JSON.stringify(data)});
   }catch(e){console.warn('Cloud push failed:',e.message);}
 }
 async function syncPull(){
   if(!SYNC.enabled||!SYNC.endpoint||SYNC.endpoint.includes('YOUR_BIN'))return;
   try{
-    const res=await fetch(SYNC.endpoint+'/latest',{headers:{'X-Master-Key':SYNC.apiKey}});
-    const json=await res.json();const data=json.record||json;
+    const res=await fetch(SYNC.endpoint,{headers:{'X-Api-Key':SYNC.apiKey}});
+    const json=await res.json();
+    const data=json.record||json;
     ALL_KEYS.forEach(k=>{if(data[k]!==null&&data[k]!==undefined)localStorage.setItem(k,JSON.stringify(data[k]));});
   }catch(e){console.warn('Cloud pull failed:',e.message);}
+}
+
+/* ========== OWNER AUTO-SYNC (Real-time feel) ========== */
+function startOwnerAutoSync(){
+  if(window.ownerSyncInterval) clearInterval(window.ownerSyncInterval);
+  console.log('Owner auto-sync started (every 8s).');
+  window.ownerSyncInterval=setInterval(async()=>{
+    if(currentUser && currentUser.role==='owner' && document.visibilityState==='visible'){
+      const snapshot=JSON.stringify({
+        u:get(K_USERS,[]),
+        p:get(K_PAY,[]),
+        a:get(K_ATT,[]),
+        o:get(K_ORDERS,[])
+      });
+      await syncPull();
+      const fresh=JSON.stringify({
+        u:get(K_USERS,[]),
+        p:get(K_PAY,[]),
+        a:get(K_ATT,[]),
+        o:get(K_ORDERS,[])
+      });
+      if(snapshot!==fresh){
+        console.log('🔄 New data detected → refreshing owner dashboard');
+        renderOwnerStats();
+        renderMembers();
+        renderOrders();
+        renderExpiring();
+        renderLeaderboard();
+        renderRevenueChart();
+        renderOwnerWorkouts();
+      }
+    }
+  },8000);
+}
+function stopOwnerAutoSync(){
+  if(window.ownerSyncInterval){clearInterval(window.ownerSyncInterval);window.ownerSyncInterval=null;}
 }
 
 /* ========== PASSWORD HASHING (backward compatible) ========== */
@@ -677,7 +695,6 @@ function setMsg(id,text,isSuccess){
 function buildUPILink(amount,note){
   return 'upi://pay?'+['pa='+encodeURIComponent(UPI_ID),'pn='+encodeURIComponent(UPI_NAME),'am='+amount,'cu=INR','tn='+encodeURIComponent(note)].join('&');
 }
-
 function openPayment(){
   showPage('paymentPage');
   const amount=PLANS[currentUser.plan].price;
@@ -689,7 +706,6 @@ function openPayment(){
   qrBox.innerHTML='';
   new QRCode(qrBox,{text:upiLink,width:210,height:210,colorDark:'#0b1220',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
 }
-
 function openUPIApp(e){
   if(e)e.preventDefault();
   const msg=document.getElementById('payMsg');
@@ -702,15 +718,13 @@ function openUPIApp(e){
   catch(err){try{window.location.href=link;}catch(e2){msg.textContent='Could not open UPI app.';msg.className='error';return;}}
   setTimeout(()=>{if(msg.textContent==='Opening your UPI app...'){msg.innerHTML='Didn\'t open? Try scanning the QR code.';msg.className='muted';}},2000);
 }
-
 function copyUPI(){
   const msg=document.getElementById('payMsg');
   const done=()=>{msg.textContent='✅ UPI ID copied';msg.className='success';setTimeout(()=>{msg.textContent='';msg.className='muted';},2500);};
   if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(UPI_ID).then(done).catch(()=>{msg.textContent='UPI ID: '+UPI_ID;msg.className='muted';});
   else{msg.textContent='UPI ID: '+UPI_ID;msg.className='muted';}
 }
-
-function markPaid(){
+async function markPaid(){
   const users=get(K_USERS,[]);
   const user=users.find(x=>x.username===currentUser.username);
   user.payment='Awaiting';user.paidAt=new Date().toISOString();save(K_USERS,users);
@@ -720,15 +734,13 @@ function markPaid(){
   addNote('owner',`💰 Payment awaiting approval: ${user.name} (${user.username}) • ${user.plan} • ₹${PLANS[user.plan].price}`);
   currentUser=user;openWaiting();
 }
-
 function openWaiting(){
   showPage('waitingPage');
   waitInfo.innerHTML=`Hi <b>${currentUser.name}</b>,<br>your payment has been recorded and is now <b style="color:#38bdf8">waiting for the gym owner's approval</b>.`;
   document.getElementById('waitMsg').textContent='';
 }
-
 async function refreshWaiting(){
-  if(SYNC.enabled)await syncPull();
+  await syncPull();
   const users=get(K_USERS,[]);
   const fresh=users.find(x=>x.username===currentUser.username);
   if(!fresh){document.getElementById('waitMsg').textContent='Account not found.';return;}
@@ -758,19 +770,13 @@ function openUser(){
   loadHeaderAvatar();loadNotifBadge();checkExpiry();
 }
 
-/* ========== HEADER AVATAR + NOTIF BADGE ========== */
 function loadHeaderAvatar(){
   const photos=get(K_PHOTOS,{});
   const btn=document.getElementById('headerAvatar');
   const photo=photos[currentUser.username];
-  if(photo){
-    btn.innerHTML=`<img src="${photo}" alt="me">`;
-  }else{
-    const initial=(currentUser.name||'U').charAt(0).toUpperCase();
-    btn.textContent=initial;
-  }
+  if(photo){btn.innerHTML=`<img src="${photo}" alt="me">`;}
+  else{const initial=(currentUser.name||'U').charAt(0).toUpperCase();btn.textContent=initial;}
 }
-
 function loadNotifBadge(){
   const notes=get(K_NOTE,{})[currentUser.username]||[];
   const unread=notes.filter(n=>!n.read).length;
@@ -778,9 +784,7 @@ function loadNotifBadge(){
   if(unread>0){badge.style.display='flex';badge.textContent=unread;}
   else{badge.style.display='none';}
 }
-
 function scrollToNotifications(){
-  /* Mark all as read */
   const all=get(K_NOTE,{});
   const mine=all[currentUser.username]||[];
   mine.forEach(n=>n.read=true);
@@ -801,54 +805,37 @@ function openProfile(){
   pNewPass.value='';
   document.getElementById('profMsg').textContent='';
 }
-
 function loadBigAvatar(){
   const photos=get(K_PHOTOS,{});
   const big=document.getElementById('bigAvatar');
   const photo=photos[currentUser.username];
-  if(photo){
-    big.innerHTML=`<img src="${photo}" alt="me">`;
-  }else{
-    const initial=(currentUser.name||'U').charAt(0).toUpperCase();
-    big.innerHTML=initial;
-  }
+  if(photo){big.innerHTML=`<img src="${photo}" alt="me">`;}
+  else{const initial=(currentUser.name||'U').charAt(0).toUpperCase();big.innerHTML=initial;}
 }
-
 function uploadPhoto(evt){
   const file=evt.target.files[0];
   if(!file)return;
-  if(file.size>2*1024*1024){
-    setMsg('profMsg','Photo too large. Please use an image under 2MB.');
-    return;
-  }
+  if(file.size>2*1024*1024){setMsg('profMsg','Photo too large. Please use an image under 2MB.');return;}
   const reader=new FileReader();
   reader.onload=e=>{
     const photos=get(K_PHOTOS,{});
     photos[currentUser.username]=e.target.result;
     save(K_PHOTOS,photos);
-    loadBigAvatar();
-    loadHeaderAvatar();
+    loadBigAvatar();loadHeaderAvatar();
     setMsg('profMsg','✅ Photo updated!',true);
     evt.target.value='';
   };
   reader.readAsDataURL(file);
 }
-
 function removePhoto(){
   const photos=get(K_PHOTOS,{});
   delete photos[currentUser.username];
   save(K_PHOTOS,photos);
-  loadBigAvatar();
-  loadHeaderAvatar();
+  loadBigAvatar();loadHeaderAvatar();
   setMsg('profMsg','Photo removed',true);
 }
-
 async function updateProfile(){
-  const name=pName.value.trim();
-  const phone=pPhone.value.trim();
-  const age=pAge.value;
-  const gender=pGender.value;
-  const newPass=pNewPass.value;
+  const name=pName.value.trim(),phone=pPhone.value.trim(),age=pAge.value,gender=pGender.value,newPass=pNewPass.value;
   if(!name)return setMsg('profMsg','Enter your full name');
   if(!/^[0-9]{10}$/.test(phone))return setMsg('profMsg','Enter valid 10-digit phone number');
   if(!age||age<10||age>80)return setMsg('profMsg','Enter valid age');
@@ -869,9 +856,7 @@ async function updateProfile(){
 /* ========== MEMBER CARD ========== */
 function loadMemberCard(){
   const u=currentUser;
-  mcName.textContent=u.name;
-  mcPlan.textContent=u.plan;
-  mcExpiry.textContent=u.expiry;
+  mcName.textContent=u.name;mcPlan.textContent=u.plan;mcExpiry.textContent=u.expiry;
   const id='LU-'+u.username.toUpperCase().slice(0,8).padStart(8,'0');
   mcId.textContent=id;mcTail.textContent=id.slice(-4);
   const expired=new Date(u.expiry)<new Date();
@@ -897,7 +882,6 @@ function checkIn(){
   checkCheckinBadges(currentUser.username);
   loadAttendance();loadBadges();loadPoints();
 }
-
 function loadAttendance(){
   const att=get(K_ATT,[]).filter(x=>x.username===currentUser.username);
   uCount.textContent=att.length;
@@ -907,7 +891,6 @@ function loadAttendance(){
     ${att.slice().reverse().map(a=>`<tr><td>${a.date}</td><td>${a.time}</td><td>${a.status}</td></tr>`).join('')||'<tr><td colspan="3" class="muted">No check-ins yet</td></tr>'}
   `;
 }
-
 function calcStreak(username){
   const dates=[...new Set(get(K_ATT,[]).filter(x=>x.username===username).map(x=>x.date))].sort().reverse();
   if(!dates.length)return 0;
@@ -979,7 +962,6 @@ function addSetRow(){
   div.innerHTML=`<input class="wl-reps" type="number" placeholder="Reps" min="1"><input class="wl-weight" type="number" placeholder="Weight (kg)" step="0.5" min="0"><button class="btn red" onclick="this.parentElement.remove()">×</button>`;
   wlSets.appendChild(div);
 }
-
 function saveWorkout(){
   const ex=wlExercise.value.trim();
   if(!ex)return setMsg('wlMsg','Enter exercise name');
@@ -1007,7 +989,6 @@ function saveWorkout(){
   setMsg('wlMsg',newPR?'🎉 New PR! Workout saved.':'✅ Workout saved. +15 pts',true);
   loadWorkouts();loadPRs();loadBadges();loadPoints();
 }
-
 function loadWorkouts(){
   const logs=get(K_WORKOUT,{})[currentUser.username]||[];
   wlHistory.innerHTML=`
@@ -1033,7 +1014,7 @@ function loadPRs(){
   `;
 }
 
-/* ========== TASKS (default plan for new members) ========== */
+/* ========== TASKS ========== */
 function loadTasks(){
   const tasks=get(K_TASK,{});
   const my=tasks[currentUser.username]||DEFAULT_TASK;
@@ -1113,7 +1094,6 @@ function openStore(){
   renderProducts();
   renderMyOrders();
 }
-
 function renderProducts(){
   productGrid.innerHTML=STORE_PRODUCTS.map(p=>`
     <div class="product-card">
@@ -1125,29 +1105,18 @@ function renderProducts(){
     </div>
   `).join('');
 }
-
 function buyProduct(id){
   const p=STORE_PRODUCTS.find(x=>x.id===id);
   if(!p)return;
   const orders=get(K_ORDERS,[]);
-  orders.unshift({
-    id:Date.now(),
-    username:currentUser.username,
-    memberName:currentUser.name,
-    productId:p.id,
-    productName:p.name,
-    emoji:p.emoji,
-    price:p.price,
-    mrp:p.mrp,
-    status:'Pending',
-    date:new Date().toISOString().slice(0,10)
-  });
+  orders.unshift({id:Date.now(),username:currentUser.username,memberName:currentUser.name,
+    productId:p.id,productName:p.name,emoji:p.emoji,price:p.price,mrp:p.mrp,
+    status:'Pending',date:new Date().toISOString().slice(0,10)});
   save(K_ORDERS,orders);
   addNote(currentUser.username,`🛒 Order placed: ${p.name} (₹${p.price}). Collect at gym counter.`);
   alert(`✅ Order placed!\n\n${p.name}\nPrice: ₹${p.price} (MRP ₹${p.mrp})\n\nCollect & pay at the gym counter.`);
   renderMyOrders();
 }
-
 function renderMyOrders(){
   const list=get(K_ORDERS,[]).filter(o=>o.username===currentUser.username);
   myOrdersTable.innerHTML=`
@@ -1164,8 +1133,8 @@ function openOwner(){
   showPage('ownerPage');
   renderOwnerStats();renderMembers();renderOwnerWorkouts();renderExpiring();
   renderRevenueChart();renderExpenses();renderLeaderboard();renderOrders();
+  startOwnerAutoSync();
 }
-
 function renderOwnerStats(){
   const users=get(K_USERS,[]).filter(x=>x.role==='user');
   const att=get(K_ATT,[]);const today=new Date().toISOString().slice(0,10);
@@ -1182,7 +1151,6 @@ function renderOwnerStats(){
   oProfit.textContent='₹'+(revenue-expenses);
   oProfit.style.color=(revenue-expenses)>=0?'#4ade80':'#f87171';
 }
-
 function renderMembers(filter){
   filter=(filter||'').trim().toLowerCase();
   let users=get(K_USERS,[]).filter(x=>x.role==='user');
@@ -1199,7 +1167,6 @@ function renderMembers(filter){
     }).join(''):'<tr><td colspan="5" class="muted">No matching members</td></tr>'}
   `;
 }
-
 function renderOwnerWorkouts(){
   const users=get(K_USERS,[]).filter(x=>x.role==='user');
   const tasks=get(K_TASK,{});
@@ -1208,7 +1175,6 @@ function renderOwnerWorkouts(){
     return `<div class="task"><b>${u.name}</b><p class="muted" style="font-size:12px">${DAYS.map(d=>`${d}: ${t[d]}`).join(' | ')}</p></div>`;
   }).join('')||'<p class="muted">No members yet</p>';
 }
-
 function renderExpiring(){
   const users=get(K_USERS,[]).filter(x=>x.role==='user');
   const list=users.filter(u=>Math.ceil((new Date(u.expiry)-new Date())/(1000*60*60*24))<=7);
@@ -1218,7 +1184,6 @@ function renderExpiring(){
     return `<div class="task"><b>${u.name}</b><p class="muted">${tag} • Expires ${u.expiry}</p></div>`;
   }).join(''):'<p class="muted">No expiring members</p>';
 }
-
 function renderRevenueChart(){
   const pays=get(K_PAY,[]).filter(p=>p.status==='Success');
   const months=[];const now=new Date();
@@ -1232,9 +1197,8 @@ function renderRevenueChart(){
       <div class="rev-bar"><div class="rev-fill" style="height:${Math.max(h,3)}%"></div></div>
       <div style="font-size:11px;color:#93a1b8;font-weight:600">${m.label}</div>
     </div>`;
-  }).join('')}</div`;
+  }).join('')}</div>`;
 }
-
 function addExpense(){
   const cat=expCategory.value,amt=parseFloat(expAmount.value),note=expNote.value.trim();
   if(!cat)return setMsg('expMsg','Select category');
@@ -1256,7 +1220,6 @@ function delExpense(id){
   const list=get(K_EXPENSES,[]).filter(e=>e.id!==id);
   save(K_EXPENSES,list);renderExpenses();renderOwnerStats();
 }
-
 function renderOrders(){
   const list=get(K_ORDERS,[]);
   ordersTable.innerHTML=`
@@ -1281,7 +1244,6 @@ function updateOrder(id,status){
     renderOrders();
   }
 }
-
 function renderLeaderboard(){
   const users=get(K_USERS,[]).filter(x=>x.role==='user');
   const pts=get(K_POINTS,{});const badges=get(K_BADGES,{});
@@ -1296,7 +1258,6 @@ function renderLeaderboard(){
     </tr>`).join(''):'<tr><td colspan="4" class="muted">No members yet</td></tr>'}
   `;
 }
-
 function approve(username){
   const users=get(K_USERS,[]);
   const user=users.find(x=>x.username===username);
@@ -1306,9 +1267,11 @@ function approve(username){
   pays.forEach(p=>{if(p.username===username&&p.status!=='Success')p.status='Success';});
   save(K_PAY,pays);
   addNote(username,'✅ Your payment has been approved. Welcome to LUNA!');
-  openOwner();
+  // Immediately push to server
+  syncPush();
+  // Refresh owner view
+  renderOwnerStats();renderMembers();renderOrders();
 }
-
 function broadcast(){
   const text=bcastText.value.trim();
   if(!text)return setMsg('bcastMsg','Type something to broadcast');
@@ -1317,7 +1280,6 @@ function broadcast(){
   bcastText.value='';
   setMsg('bcastMsg',`Sent to ${users.length} member(s)`,true);
 }
-
 function exportData(){
   const data={};ALL_KEYS.forEach(k=>data[k]=get(k,null));
   data.exported=new Date().toISOString();
@@ -1327,8 +1289,8 @@ function exportData(){
   a.download='luna-backup-'+new Date().toISOString().slice(0,10)+'.json';
   document.body.appendChild(a);a.click();document.body.removeChild(a);
 }
-
 function logout(){
+  stopOwnerAutoSync();
   currentUser=null;
   loginUser.value='';loginPass.value='';loginMsg.textContent='';
   showPage('loginPage');
@@ -1349,9 +1311,22 @@ function logout(){
     deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;bar.style.display='none';
   };
   window.addEventListener('appinstalled',()=>{bar.style.display='none';});
+
+  // Register Service Worker for PWA install
+  if('serviceWorker' in navigator){
+    window.addEventListener('load',()=>{
+      navigator.serviceWorker.register('/sw.js')
+        .then(reg=>console.log('Service Worker registered:',reg.scope))
+        .catch(err=>console.warn('SW registration failed:',err));
+    });
+  }
 })();
 
-(async function init(){await syncPull();showPage('loginPage');})();
+/* ========== INIT ========== */
+(async function init(){
+  await syncPull();
+  showPage('loginPage');
+})();
 </script>
 </body>
 </html>
