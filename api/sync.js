@@ -24,8 +24,16 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Server missing SYNC_API_KEY' });
   }
   if (providedKey !== process.env.SYNC_API_KEY) {
-    return res.status(401).json({ error: 'Invalid API key' });
-  }
+  return res.status(401).json({ 
+    error: 'Invalid API key',
+    debug: {
+      providedLength: providedKey ? providedKey.length : 0,
+      providedPrefix: providedKey ? providedKey.slice(0, 5) : null,
+      envLength: process.env.SYNC_API_KEY ? process.env.SYNC_API_KEY.length : 0,
+      envPrefix: process.env.SYNC_API_KEY ? process.env.SYNC_API_KEY.slice(0, 5) : null
+    }
+  });
+}
 
   try {
     if (req.method === 'GET') {
