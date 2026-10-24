@@ -1,21 +1,13 @@
 import prisma from '../lib/prisma.js';
 
-/* =========================================================
-   LUNA GYM — Bulk sync endpoint
-   GET  /api/sync  → returns full app state as JSON
-   PUT  /api/sync  → replaces full app state
-   Auth: x-api-key header must match SYNC_API_KEY env var
-   ========================================================= */
-
 export default async function handler(req, res) {
-  // CORS
+  
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, PUT, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Api-Key');
 
   if (req.method === 'OPTIONS') return res.status(204).end();
 
-  // Auth check
   const providedKey =
     req.headers['x-api-key'] ||
     (req.headers.authorization || '').replace('Bearer ', '');
@@ -24,16 +16,8 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Server missing SYNC_API_KEY' });
   }
   if (providedKey !== process.env.SYNC_API_KEY) {
-  return res.status(401).json({ 
-    error: 'Invalid API key',
-    debug: {
-      providedLength: providedKey ? providedKey.length : 0,
-      providedPrefix: providedKey ? providedKey.slice(0, 5) : null,
-      envLength: process.env.SYNC_API_KEY ? process.env.SYNC_API_KEY.length : 0,
-      envPrefix: process.env.SYNC_API_KEY ? process.env.SYNC_API_KEY.slice(0, 5) : null
-    }
-  });
-}
+    return res.status(401).json({ error: 'Invalid API key' });
+  }
 
   try {
     if (req.method === 'GET') {
@@ -45,10 +29,14 @@ export default async function handler(req, res) {
     }
 
     if (req.method === 'PUT') {
-      const body =
-        typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+      let body;
+      try {
+        body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+      } catch {
+        return res.status(400).json({ error: 'Invalid JSON body' });
+      }
 
-      if (!body || typeof body !== 'object') {
+      if (!body || typeof body !== 'object' || Array.isArray(body)) {
         return res.status(400).json({ error: 'Invalid JSON body' });
       }
 
@@ -67,6 +55,6 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   } catch (err) {
     console.error('sync error:', err);
-    return res.status(500).json({ error: 'Server error', detail: err.message });
+    return res.status(500).json({ error: 'Server error' });
   }
 }

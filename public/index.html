@@ -536,7 +536,21 @@ const STORE_PRODUCTS=[
 
 /* ========== HELPERS ========== */
 function get(k,d){try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}}
-function save(k,v){localStorage.setItem(k,JSON.stringify(v));if(SYNC.enabled)syncPush();}
+function dateKey(date=new Date()){
+  const year=date.getFullYear(),month=String(date.getMonth()+1).padStart(2,'0'),day=String(date.getDate()).padStart(2,'0');
+  return `${year}-${month}-${day}`;
+}
+function previousDateKey(key){
+  const [year,month,day]=key.split('-').map(Number);
+  return new Date(Date.UTC(year,month-1,day-1)).toISOString().slice(0,10);
+}
+function daysBetween(later,earlier){
+  if(typeof later!=='string'||typeof earlier!=='string')return NaN;
+  const [ly,lm,ld]=later.split('-').map(Number),[ey,em,ed]=earlier.split('-').map(Number);
+  return (Date.UTC(ly,lm-1,ld)-Date.UTC(ey,em-1,ed))/86400000;
+}
+let bootstrapping=true;
+function save(k,v){localStorage.setItem(k,JSON.stringify(v));if(!bootstrapping&&SYNC.enabled)syncPush();}
 
 if(!localStorage.getItem(K_USERS))save(K_USERS,[{name:'Owner',username:'owner',password:'owner123',role:'owner'}]);
 if(!localStorage.getItem(K_ATT))save(K_ATT,[]);
@@ -551,21 +565,26 @@ if(!localStorage.getItem(K_BADGES))save(K_BADGES,{});
 if(!localStorage.getItem(K_EXPENSES))save(K_EXPENSES,[]);
 if(!localStorage.getItem(K_PHOTOS))save(K_PHOTOS,{});
 if(!localStorage.getItem(K_ORDERS))save(K_ORDERS,[]);
+bootstrapping=false;
 
 let currentUser=null;
+let syncQueue=Promise.resolve();
 
 /* ========== CLOUD SYNC ========== */
 async function syncPush(){
-  if(!SYNC.enabled||!SYNC.endpoint||SYNC.endpoint.includes('YOUR_BIN'))return;
-  try{
-    const data={};ALL_KEYS.forEach(k=>{data[k]=get(k,null)});data._updated=new Date().toISOString();
-    await fetch(SYNC.endpoint,{method:'PUT',headers:{'Content-Type':'application/json','X-Api-Key':SYNC.apiKey},body:JSON.stringify(data)});
-  }catch(e){console.warn('Cloud push failed:',e.message);}
+  if(!SYNC.enabled||!SYNC.endpoint||/YOUR[-_]/i.test(SYNC.endpoint))return;
+  const data={};ALL_KEYS.forEach(k=>{data[k]=get(k,null)});data._updated=new Date().toISOString();
+  syncQueue=syncQueue.then(async()=>{
+    const res=await fetch(SYNC.endpoint,{method:'PUT',headers:{'Content-Type':'application/json','X-Api-Key':SYNC.apiKey},body:JSON.stringify(data)});
+    if(!res.ok)throw new Error(`HTTP ${res.status}`);
+  }).catch(e=>console.warn('Cloud push failed:',e.message));
+  await syncQueue;
 }
 async function syncPull(){
-  if(!SYNC.enabled||!SYNC.endpoint||SYNC.endpoint.includes('YOUR_BIN'))return;
+  if(!SYNC.enabled||!SYNC.endpoint||/YOUR[-_]/i.test(SYNC.endpoint))return;
   try{
     const res=await fetch(SYNC.endpoint,{headers:{'X-Api-Key':SYNC.apiKey}});
+    if(!res.ok)throw new Error(`HTTP ${res.status}`);
     const json=await res.json();
     const data=json.record||json;
     ALL_KEYS.forEach(k=>{if(data[k]!==null&&data[k]!==undefined)localStorage.setItem(k,JSON.stringify(data[k]));});
@@ -675,13 +694,13 @@ async function register(){
   const expiry=new Date();expiry.setDate(expiry.getDate()+PLANS[plan].days);
   const hashed=await hashPassword(password);
   currentUser={name,username,password:hashed,phone,age,gender,role:'user',plan,payment:'Pending',
-    expiry:expiry.toISOString().slice(0,10),joined:new Date().toISOString().slice(0,10)};
+    expiry:dateKey(expiry),joined:dateKey()};
   users.push(currentUser);save(K_USERS,users);
   const tasks=get(K_TASK,{});
   tasks[username]=JSON.parse(JSON.stringify(DEFAULT_TASK));
   save(K_TASK,tasks);
   const pays=get(K_PAY,[]);
-  pays.push({username,amount:PLANS[plan].price,method:'UPI / QR',status:'Pending',date:new Date().toISOString().slice(0,10)});
+  pays.push({username,amount:PLANS[plan].price,method:'UPI / QR',status:'Pending',date:dateKey()});
   save(K_PAY,pays);
   setMsg('regMsg','Registered successfully. Complete payment.');
   openPayment();
@@ -793,6 +812,13 @@ function scrollToNotifications(){
   loadNotifBadge();loadNotes();
   document.getElementById('notificationsCard').scrollIntoView({behavior:'smooth',block:'start'});
 }
+function loadProfile(){
+  pPhone.value = currentUser.phone || '';
+  pAge.value = currentUser.age || '';
+  pGender.value = currentUser.gender || '';
+  pNewPass.value = '';
+  document.getElementById('profMsg').textContent = '';
+}
 
 /* ========== PROFILE PAGE + PHOTO UPLOAD ========== */
 function openProfile(){
@@ -859,7 +885,7 @@ function loadMemberCard(){
   mcName.textContent=u.name;mcPlan.textContent=u.plan;mcExpiry.textContent=u.expiry;
   const id='LU-'+u.username.toUpperCase().slice(0,8).padStart(8,'0');
   mcId.textContent=id;mcTail.textContent=id.slice(-4);
-  const expired=new Date(u.expiry)<new Date();
+  const expired=u.expiry<dateKey();
   mcStatus.textContent=expired?'EXPIRED':'ACTIVE';
   mcStatus.className=expired?'badge pending':'badge paid';
   mcQr.innerHTML='';
@@ -868,7 +894,7 @@ function loadMemberCard(){
 
 /* ========== ATTENDANCE ========== */
 function checkIn(){
-  const today=new Date().toISOString().slice(0,10);
+  const today=dateKey();
   const att=get(K_ATT,[]);
   if(att.find(x=>x.username===currentUser.username&&x.date===today)){
     checkMsg.textContent='You have already checked in today';
@@ -894,13 +920,12 @@ function loadAttendance(){
 function calcStreak(username){
   const dates=[...new Set(get(K_ATT,[]).filter(x=>x.username===username).map(x=>x.date))].sort().reverse();
   if(!dates.length)return 0;
-  const today=new Date().toISOString().slice(0,10);
-  const yest=new Date(Date.now()-86400000).toISOString().slice(0,10);
+  const today=dateKey();
+  const yest=previousDateKey(today);
   if(dates[0]!==today&&dates[0]!==yest)return 0;
   let streak=1;
   for(let i=1;i<dates.length;i++){
-    const prev=new Date(dates[i-1]);prev.setDate(prev.getDate()-1);
-    if(prev.toISOString().slice(0,10)===dates[i])streak++;
+    if(previousDateKey(dates[i-1])===dates[i])streak++;
     else break;
   }
   return streak;
@@ -970,7 +995,7 @@ function saveWorkout(){
   if(!sets.length)return setMsg('wlMsg','Add at least one set with reps');
   const logs=get(K_WORKOUT,{});
   logs[currentUser.username]=logs[currentUser.username]||[];
-  logs[currentUser.username].unshift({id:Date.now(),date:new Date().toISOString().slice(0,10),time:new Date().toLocaleTimeString(),exercise:ex,sets});
+  logs[currentUser.username].unshift({id:Date.now(),date:dateKey(),time:new Date().toLocaleTimeString(),exercise:ex,sets});
   save(K_WORKOUT,logs);
   const prs=get(K_PR,{});
   prs[currentUser.username]=prs[currentUser.username]||{};
@@ -979,7 +1004,7 @@ function saveWorkout(){
   let newPR=false;
   const existing=prs[currentUser.username][ex];
   if(maxWeight>0&&(!existing||maxWeight>existing.weight)){
-    prs[currentUser.username][ex]={weight:maxWeight,reps:bestSet.reps,date:new Date().toISOString().slice(0,10)};
+    prs[currentUser.username][ex]={weight:maxWeight,reps:bestSet.reps,date:dateKey()};
     save(K_PR,prs);newPR=true;
   }
   addPoints(currentUser.username,15);
@@ -1037,7 +1062,7 @@ function saveTask(day){
 function addNote(username,text){
   const notes=get(K_NOTE,{});
   notes[username]=notes[username]||[];
-  notes[username].unshift({text,date:new Date().toISOString().slice(0,10),read:false});
+  notes[username].unshift({text,date:dateKey(),read:false});
   save(K_NOTE,notes);
 }
 function loadNotes(){
@@ -1047,8 +1072,11 @@ function loadNotes(){
     '<p class="muted">No notifications</p>';
 }
 function checkExpiry(){
-  const days=Math.ceil((new Date(currentUser.expiry)-new Date())/(1000*60*60*24));
-  if(days<=7&&days>=0){addNote(currentUser.username,`Your ${currentUser.plan} plan expires in ${days} day(s).`);loadNotes();loadNotifBadge();}
+  const today=dateKey(),days=daysBetween(currentUser.expiry,today);
+  const notice=`Your ${currentUser.plan} plan expires in ${days} day(s).`;
+  const notes=get(K_NOTE,{});
+  const alreadyNotified=(notes[currentUser.username]||[]).some(n=>n.date===today&&n.text===notice);
+  if(days<=7&&days>=0&&!alreadyNotified){addNote(currentUser.username,notice);loadNotes();loadNotifBadge();}
 }
 
 /* ========== HEALTH ========== */
@@ -1064,7 +1092,7 @@ function calcBMI(){
   setMsg('bmiMsg',`BMI: ${bmi} — ${cat}`,true);
   const logs=get(K_WEIGHT,{});
   logs[currentUser.username]=logs[currentUser.username]||[];
-  logs[currentUser.username].unshift({date:new Date().toISOString().slice(0,10),weight:w,bmi,category:cat});
+  logs[currentUser.username].unshift({date:dateKey(),weight:w,bmi,category:cat});
   save(K_WEIGHT,logs);hHeight.value='';hWeight.value='';
   loadWeightLog();
 }
@@ -1111,7 +1139,7 @@ function buyProduct(id){
   const orders=get(K_ORDERS,[]);
   orders.unshift({id:Date.now(),username:currentUser.username,memberName:currentUser.name,
     productId:p.id,productName:p.name,emoji:p.emoji,price:p.price,mrp:p.mrp,
-    status:'Pending',date:new Date().toISOString().slice(0,10)});
+    status:'Pending',date:dateKey()});
   save(K_ORDERS,orders);
   addNote(currentUser.username,`🛒 Order placed: ${p.name} (₹${p.price}). Collect at gym counter.`);
   alert(`✅ Order placed!\n\n${p.name}\nPrice: ₹${p.price} (MRP ₹${p.mrp})\n\nCollect & pay at the gym counter.`);
@@ -1137,7 +1165,7 @@ function openOwner(){
 }
 function renderOwnerStats(){
   const users=get(K_USERS,[]).filter(x=>x.role==='user');
-  const att=get(K_ATT,[]);const today=new Date().toISOString().slice(0,10);
+  const att=get(K_ATT,[]);const today=dateKey();
   const pays=get(K_PAY,[]).filter(p=>p.status==='Success');
   const revenue=pays.reduce((s,p)=>s+Number(p.amount||0),0);
   const expenses=get(K_EXPENSES,[]).reduce((s,e)=>s+Number(e.amount||0),0);
@@ -1177,9 +1205,9 @@ function renderOwnerWorkouts(){
 }
 function renderExpiring(){
   const users=get(K_USERS,[]).filter(x=>x.role==='user');
-  const list=users.filter(u=>Math.ceil((new Date(u.expiry)-new Date())/(1000*60*60*24))<=7);
+  const list=users.filter(u=>daysBetween(u.expiry,dateKey())<=7);
   expiringList.innerHTML=list.length?list.map(u=>{
-    const days=Math.ceil((new Date(u.expiry)-new Date())/(1000*60*60*24));
+    const days=daysBetween(u.expiry,dateKey());
     const tag=days<0?'EXPIRED':`${days} day(s) left`;
     return `<div class="task"><b>${u.name}</b><p class="muted">${tag} • Expires ${u.expiry}</p></div>`;
   }).join(''):'<p class="muted">No expiring members</p>';
@@ -1187,7 +1215,7 @@ function renderExpiring(){
 function renderRevenueChart(){
   const pays=get(K_PAY,[]).filter(p=>p.status==='Success');
   const months=[];const now=new Date();
-  for(let i=5;i>=0;i--){const d=new Date(now.getFullYear(),now.getMonth()-i,1);months.push({key:d.toISOString().slice(0,7),label:d.toLocaleString('en',{month:'short'}),total:0});}
+  for(let i=5;i>=0;i--){const d=new Date(now.getFullYear(),now.getMonth()-i,1);months.push({key:`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`,label:d.toLocaleString('en',{month:'short'}),total:0});}
   pays.forEach(p=>{const k=(p.date||'').slice(0,7);const m=months.find(x=>x.key===k);if(m)m.total+=Number(p.amount||0);});
   const max=Math.max(...months.map(m=>m.total),1);
   revChart.innerHTML=`<div style="display:flex;gap:10px;align-items:flex-end;padding:0 4px">${months.map(m=>{
@@ -1204,7 +1232,7 @@ function addExpense(){
   if(!cat)return setMsg('expMsg','Select category');
   if(!amt||amt<=0)return setMsg('expMsg','Enter valid amount');
   const list=get(K_EXPENSES,[]);
-  list.unshift({id:Date.now(),category:cat,amount:amt,note,date:new Date().toISOString().slice(0,10)});
+  list.unshift({id:Date.now(),category:cat,amount:amt,note,date:dateKey()});
   save(K_EXPENSES,list);expAmount.value='';expNote.value='';
   setMsg('expMsg','✅ Expense added',true);
   renderExpenses();renderOwnerStats();
@@ -1286,7 +1314,7 @@ function exportData(){
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
   const a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
-  a.download='luna-backup-'+new Date().toISOString().slice(0,10)+'.json';
+  a.download='luna-backup-'+dateKey()+'.json';
   document.body.appendChild(a);a.click();document.body.removeChild(a);
 }
 function logout(){

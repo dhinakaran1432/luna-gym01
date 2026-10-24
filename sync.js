@@ -1,4 +1,4 @@
-import prisma from '../lib/prisma.js';
+import prisma from './lib/prisma.js';
 
 /* =========================================================
    LUNA GYM — Bulk sync endpoint
@@ -37,10 +37,14 @@ export default async function handler(req, res) {
     }
 
     if (req.method === 'PUT') {
-      const body =
-        typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+      let body;
+      try {
+        body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+      } catch {
+        return res.status(400).json({ error: 'Invalid JSON body' });
+      }
 
-      if (!body || typeof body !== 'object') {
+      if (!body || typeof body !== 'object' || Array.isArray(body)) {
         return res.status(400).json({ error: 'Invalid JSON body' });
       }
 
@@ -59,6 +63,6 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   } catch (err) {
     console.error('sync error:', err);
-    return res.status(500).json({ error: 'Server error', detail: err.message });
+    return res.status(500).json({ error: 'Server error' });
   }
 }
